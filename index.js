@@ -1,9 +1,13 @@
-var http = require("http"); 
-const port = 8000; 
+// Set up express
+const express = require ("express");
+const app = express();
+const port = 8000;
 
-http.createServer(function(req, res) { 
-    res.writeHead(200, { "Content-Type": "text/plain" });
-    res.end("Hello World!");
-    }).listen(port, function() { 
-        console.log(`Node server is running on port ${port}...`); 
-}); 
+// Load the route handlers
+const mainRoutes = require("./routes/main");  
+app.use('/', mainRoutes);
+
+// Start listening for HTTP requests
+app.listen(port, 
+    () => console.log(`Node server is running on port ${port}...`)); 
+
