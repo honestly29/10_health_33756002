@@ -8,7 +8,7 @@ router.get("/", (req, res) => {
 }); 
 
 router.get("/about", (req, res) => {
-    res.render("about.ejs")
+    res.render("about.ejs", { title: "About" });
 });
 
 // Export the router object so index.js can access it
