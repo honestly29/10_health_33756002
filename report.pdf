@@ -1,0 +1,18 @@
+•	There must be a home page, with links to other pages
+•	There should be an about page
+•	There should be some search functionality with searches against the database
+•	The application must store some data in a database (MySQL)
+•	There should be a form that allows users to enter data and store it in the database
+•	If your app requires a login, it should work with username:gold and password:smiths
+•	The app should be installable on the marker’s computer:
+o	Running npm install should install all required modules
+o	There should be a database script called create_db.sql that creates the data model from scratch in the database
+o	There should be a database script called insert_test_data.sql that inserts required data in the data model, including the default login credentials if required
+•	Once installed, the app should be runnable on the marker’s computer:
+o	Running node index.js should run the app and it should listen on port 8000
+•	You should provide documentation, as a file called report.docx or report.pdf in the root of your Github repo
+•	You should provide a file called links.txt in the root of your Github repo, with links to all the pages of your deployed app that you want us to look at.  One of these should be the home link.  Each link should be given a unique name in the file, e.g:
+home=https://www.doc.gold.ac.uk/usr/123/
+about=https://www.doc.gold.ac.uk/usr/123/about
+search=home=https://www.doc.gold.ac.uk/usr/123/find-patient
+add_patient=https://www.doc.gold.ac.uk/usr/123/add-patient
