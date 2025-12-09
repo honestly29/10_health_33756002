@@ -4,7 +4,7 @@ const router = express.Router();
 
 // Handle the main routes
 router.get("/", (req, res) => {
-    res.render("index.ejs")
+    res.render("home.ejs", { title: "Home" });
 }); 
 
 router.get("/about", (req, res) => {

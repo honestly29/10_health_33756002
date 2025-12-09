@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SmartClinic</title>
+</head>
+
+<body>
+  <%- include("partials/header", { title: "Home" }) %>
+
+  <section class="hero">
+    <h1>Welcome to SmartClinic</h1>
+    <p>Book appointments quickly and manage patient schedules.</p>
+
+    <div class="hero-buttons">
+        <a class="btn" href="/appointments/book">Book Appointment</a>
+        <a class="btn" href="/login">Patient Login</a>
+        <a class="btn" href="/staff/login">Staff Portal</a>
+    </div>
+</section>
+
+  <%- include("partials/footer") %>
