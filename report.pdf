@@ -20,3 +20,6 @@ add_patient=https://www.doc.gold.ac.uk/usr/123/add-patient
 
 
 
+Workflow:
+
+Step 1: Create basic folder structure, install dependencies, create basic home/about page

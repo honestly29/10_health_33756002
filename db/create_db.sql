@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS users (
     id                 INT AUTO_INCREMENT PRIMARY KEY,
     username           VARCHAR(50) NOT NULL UNIQUE,
     hashed_password    VARCHAR(255) NOT NULL,
-    role               ENUM('patient', 'staff') NOT NULL DEFAULT 'patient',
+    user_role          ENUM('patient', 'staff') NOT NULL DEFAULT 'patient',
     created_at         DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -57,13 +57,13 @@ CREATE TABLE IF NOT EXISTS staff (
 -- Links patients and staff with appointment details
 -- If a patient or staff user is deleted, their appointments are also deleted. This keeps the table from filling up with orphaned rows.
 CREATE TABLE IF NOT EXISTS appointments (
-    id                 INT AUTO_INCREMENT PRIMARY KEY,
-    patient_id         INT NOT NULL,
-    staff_id           INT NOT NULL,
-    appointment_date   DATETIME NOT NULL,
-    reason             VARCHAR(255),
-    status             ENUM('booked', 'completed', 'cancelled') NOT NULL DEFAULT 'booked',
-    created_at         DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    id                  INT AUTO_INCREMENT PRIMARY KEY,
+    patient_id          INT NOT NULL,
+    staff_id            INT NOT NULL,
+    appointment_date    DATETIME NOT NULL,
+    reason              VARCHAR(255),
+    appointment_status  ENUM('booked', 'completed', 'cancelled') NOT NULL DEFAULT 'booked',
+    created_at          DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_appointments_patients 
         FOREIGN KEY (patient_id) REFERENCES patients(id) 
             ON DELETE CASCADE
