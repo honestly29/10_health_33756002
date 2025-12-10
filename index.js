@@ -4,7 +4,7 @@ const path = require('path');
 const session = require('express-session');
 const dotenv = require('dotenv');
 require('dotenv').config();
-const mysql = require('mysql2');
+const mysql = require('mysql2/promise');
 
 // Create the express application object
 const app = express()
@@ -32,6 +32,9 @@ app.use(session({
     secret: 'somerandomstuff',
     resave: false,
     saveUninitialized: false,
+    cookie: {
+        expires: 600000  
+    }
 }));
 
 
@@ -44,6 +47,13 @@ app.use((req, res, next) => {
   res.locals.currentUser = req.session.user || null;
   next();
 });
+
+// Make the session object available in all views
+app.use((req, res, next) => {
+    res.locals.session = req.session;
+    next();
+});
+
 
 
 // Load the route handlers
