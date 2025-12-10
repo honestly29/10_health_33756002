@@ -22,7 +22,6 @@ CREATE TABLE IF NOT EXISTS patients (
     user_id            INT NULL,   -- Patients may not have an online account
     first_name         VARCHAR(100) NOT NULL,
     last_name          VARCHAR(100) NOT NULL,
-    date_of_birth      DATE NOT NULL,
     email              VARCHAR(100),
     phone              VARCHAR(20),
     notes              TEXT,

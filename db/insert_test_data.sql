@@ -10,13 +10,12 @@ VALUES
 
 
 -- Insert patient record
-INSERT INTO patients (user_id, first_name, last_name, date_of_birth, email, phone, notes)
+INSERT INTO patients (user_id, first_name, last_name, email, phone, notes)
 VALUES
 (
     (SELECT id FROM users WHERE username = 'patient1'),
     'John',
     'Smith',
-    '1990-01-01',
     'john@example.com',
     '0123456789',
     'No known allergies.'
@@ -40,7 +39,7 @@ INSERT INTO appointments (patient_id, staff_id, appointment_date, reason, appoin
 VALUES
 (
     (SELECT id FROM patients WHERE first_name = 'John' AND last_name = 'Smith'),
-    (SELECT id FROM staff WHERE last_name = 'Smith'),
+    (SELECT id FROM staff WHERE role_title = 'Doctor'),
     '2025-01-01 10:00:00',
     'General Checkup',
     'booked'
