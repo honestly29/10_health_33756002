@@ -57,9 +57,14 @@ app.use((req, res, next) => {
 
 
 // Load the route handlers
-app.use("/", require("./routes/main"));
-app.use("/", require("./routes/auth"));
-//app.use("/patient", require("./routes/patient"));
+const mainRouter = require('./routes/main');
+app.use("/", mainRouter);
+
+const authRouter = require('./routes/auth');
+app.use("/", authRouter);
+
+const patientRouter = require('./routes/patient');
+app.use("/patient", patientRouter);
 //app.use("/staff", require("./routes/staff"));
 
 

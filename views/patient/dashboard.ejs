@@ -1,0 +1,36 @@
+<!-- views/patient/dashboard.ejs -->
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Patient Dashboard</title>
+  </head>
+  <body>
+    <h1>Welcome, <%= user.full_name || user.username %></h1>
+
+    <h2>Upcoming appointments</h2>
+    <% if (upcomingAppointments.length === 0) { %>
+      <p>You have no upcoming appointments.</p>
+    <% } else { %>
+      <ul>
+        <% upcomingAppointments.forEach(a => { %>
+          <li>
+            <%= a.date_time %> with Dr. <%= a.doctor_name %>
+          </li>
+        <% }) %>
+      </ul>
+    <% } %>
+
+    <h2>Past appointments</h2>
+    <% if (pastAppointments.length === 0) { %>
+      <p>No previous appointments found.</p>
+    <% } else { %>
+      <ul>
+        <% pastAppointments.forEach(a => { %>
+          <li>
+            <%= a.date_time %> with Dr. <%= a.doctor_name %>
+          </li>
+        <% }) %>
+      </ul>
+    <% } %>
+  </body>
+</html>

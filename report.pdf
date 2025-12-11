@@ -18,8 +18,48 @@ search=home=https://www.doc.gold.ac.uk/usr/123/find-patient
 add_patient=https://www.doc.gold.ac.uk/usr/123/add-patient
 
 
+Database model
+The application uses a MySQL database with four entities: users, patients, staff, and appointments. 
+The users table stores authentication data (username, hashed password, and role). 
+Personal information is separated into patients and staff tables, each linked to users via a foreign key. 
+This separation ensures clean role-based access and avoids mixing login data with medical details. 
+The appointments table links patients and staff and uses cascade rules to prevent orphan rows. 
+This model supports secure authentication and clear role separation.
+
+
+Authentication system:
+The authentication system is built using Express sessions, bcrypt password hashing, MySQL, and EJS templates. 
+Users can register for a patient account, while staff accounts are added manually through SQL. 
+During registration, the server validates the username, hashes the password using bcrypt, inserts a new record into the users table with role "patient", and then creates a corresponding entry in the patients table.
+During login, the application queries the users table by username, compares the submitted password with the stored bcrypt hash, and stores the authenticated user in the session object. 
+Role-based redirects are used to send staff users to /staff/dashboard and patients to /patient/dashboard.
+A logout route destroys the session. 
+Session exposure to the EJS layer is handled using res.locals.session, allowing dynamic UI changes such as showing or hiding Login, Register, or Logout links based on session state.
+
+
+Advanced Techniques:
+mysql2/promise:
+I used the mysql2/promise wrapper rather than the default mysql2 interface. 
+This utilises JavaScript Promises which allow database queries to be written in a much clearer and more structured way. 
+Promise-based queries are more readable and avoid unnecessary nested queries and repeated error handeling blocks.
+
+async/await:
+Because I used the promise wrapper, I could write authentication and registration logic using async/await, which is the standard for asynchronous JavaScript code. 
+I wrapped route handlers in async functions and used await to pause execution until a database promise resolves.
+This allows asynchronous operations (such as password hashing and SQL queries) to behave linearly like sequential code. 
+This makes errors less likely and makes handeling them easier.
+
+Relational database:
+I implemented a fully relational database with foreign keys linking users, patients, staff, and appointments. For instance, deleting a staff member cascades to remove their associated appointments. This prevents orphaned rows which would otherwise need to be removed from the database manually.
 
 
 Workflow:
 
 Step 1: Create basic folder structure, install dependencies, create basic home/about page
+
+Step 2: Create database schema
+
+Step 3: Create authentication routes (registation, login, logout)
+
+
+
