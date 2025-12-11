@@ -217,4 +217,117 @@ router.post('/appointments/:id/cancel', redirectLogin, async (req, res) => {
 });
 
 
+// GET /patient/search
+router.get('/search', redirectLogin, async (req, res) => {
+    try {
+        const userID = req.session.user.id;
+
+        // Get patient ID
+        const [patientRows] = await global.db.query(
+            'SELECT id FROM patients WHERE user_id = ?',
+            [userID]
+        );
+
+        if (patientRows.length === 0) {
+            return res.send("No patient profile found.");
+        }
+
+        // Load staff
+        const [staff] = await global.db.query(
+            "SELECT id, first_name, last_name, role_title FROM staff"
+        );
+
+        res.render("patient/search", {
+            user: req.session.user,
+            staffList: staff,
+            results: null,
+            error: null
+        });
+    } catch (err) {
+        console.error("Error loading search page:", err);
+        res.status(500).send("Error loading search page");
+    }
+});
+
+
+// POST /patient/search
+router.post('/search', redirectLogin, async (req, res) => {
+    try {
+        const userID = req.session.user.id;
+        const { date_from, date_to, staff_id, status, keyword } = req.body;
+
+        // Reload staff list
+        const [staffList] = await global.db.query(
+            "SELECT id, first_name, last_name, role_title FROM staff"
+        );
+
+        // Get patient ID
+        const [patientRows] = await global.db.query(
+            'SELECT id FROM patients WHERE user_id = ?',
+            [userID]
+        );
+
+        if (patientRows.length === 0) {
+            return res.send("No patient profile found.");
+        }
+        
+        const patientId = patientRows[0].id;
+
+        // Base SQL query
+        let sql = `
+            SELECT a.*,
+                s.first_name AS staff_first_name, 
+                s.last_name AS staff_last_name,
+                su.username AS staff_username
+            FROM appointments a
+            JOIN staff s ON a.staff_id = s.id
+            JOIN users su ON s.user_id = su.id
+            WHERE a.patient_id = ?`;
+
+        const params = [patientId];
+
+        // Apply filters
+        if (date_from) {
+            sql += " AND a.appointment_date >= ?";
+            params.push(date_from);
+        }
+
+        if (date_to) {
+            sql += " AND a.appointment_date <= ?";
+            params.push(date_to);
+        }
+
+        if (staff_id) {
+            sql += " AND a.staff_id = ?";
+            params.push(staff_id);
+        }
+
+        if (status) {
+            sql += " AND a.appointment_status = ?";
+            params.push(status);
+        }
+
+        if (keyword) {
+            sql += " AND a.reason LIKE ?";
+            params.push(`%${keyword}%`);
+        }
+
+        sql += " ORDER BY a.appointment_date ASC";
+
+        // Execute query
+        const [results] = await global.db.query(sql, params);
+
+        // Render results
+        res.render("patient/search", {
+            user: req.session.user,
+            staffList,
+            results,
+            error: results.length === 0 ? "No appointments found." : null
+        });
+    } catch (err) {
+        console.error("Error performing search:", err);
+        res.status(500).send("Error performing search");
+    }
+});
+
 module.exports = router;

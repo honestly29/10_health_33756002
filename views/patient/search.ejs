@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Search Appointments</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+
+<body>
+
+<header>
+    <h1>Search Appointments</h1>
+    <nav>
+        <a href="/patient/dashboard">Dashboard</a>
+        <a href="/patient/book">Book Appointment</a>
+        <a href="/auth/logout">Logout</a>
+    </nav>
+</header>
+
+<main>
+
+    <% if (error) { %>
+        <div class="error-box"><%= error %></div>
+    <% } %>
+
+    <form method="POST" action="/patient/search" class="search-form">
+
+        <h3>Filter Appointments</h3>
+
+        <label>Date From:</label>
+        <input type="datetime-local" name="date_from">
+
+        <label>Date To:</label>
+        <input type="datetime-local" name="date_to">
+
+        <label>Staff Member:</label>
+        <select name="staff_id">
+            <option value="">Any Staff</option>
+            <% staffList.forEach(s => { %>
+                <option value="<%= s.id %>">
+                    <%= s.first_name %> <%= s.last_name %> (<%= s.role_title %>)
+                </option>
+            <% }) %>
+        </select>
+
+        <label>Status:</label>
+        <select name="status">
+            <option value="">Any</option>
+            <option value="booked">Booked</option>
+            <option value="completed">Completed</option>
+            <option value="cancelled">Cancelled</option>
+        </select>
+
+        <label>Keyword in Reason:</label>
+        <input type="text" name="keyword" placeholder="e.g. headache">
+
+        <button type="submit">Search</button>
+    </form>
+
+    <% if (results) { %>
+        <h2>Search Results</h2>
+
+        <% if (results.length === 0) { %>
+            <p>No results found.</p>
+        <% } else { %>
+            <table class="appointments-table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Reason</th>
+                        <th>Staff</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <% results.forEach(app => { %>
+                        <tr>
+                            <td><%= app.appointment_date.toLocaleString() %></td>
+                            <td><%= app.reason %></td>
+                            <td><%= app.staff_first_name %> <%= app.staff_last_name %>
+                                (<%= app.staff_username %>)
+                            </td>
+                            <td><%= app.appointment_status %></td>
+                        </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        <% } %>
+    <% } %>
+
+</main>
+
+</body>
+</html>
