@@ -168,4 +168,53 @@ router.post('/book', redirectLogin, async (req, res) => {
     }
 });
 
+
+// POST /patient/appointments/:id/cancel
+router.post('/appointments/:id/cancel', redirectLogin, async (req, res) => {
+    try {
+        const appointmentId = req.params.id;
+        const userID = req.session.user.id;
+
+        // 1. Get patient ID
+        const [patientRows] = await global.db.query(
+            'SELECT id FROM patients WHERE user_id = ?',
+            [userID]
+        );
+
+        if (patientRows.length === 0) {
+            return res.status(403).send("No patient profile found.");
+        }
+
+        const patientId = patientRows[0].id;
+
+        // 2. Verify appointment belongs to patient
+        const [apptRows] = await global.db.query(
+            'SELECT * FROM appointments WHERE id = ?',
+            [appointmentId]
+        );
+
+        if (apptRows.length === 0) {
+            return res.status(404).send("Appointment not found.");
+        }
+
+        if (apptRows[0].patient_id !== patientId) {
+            return res.status(403).send("You are not allowed to cancel this appointment.");
+        }
+
+        // 3. Cancel the appointment
+        await global.db.query(
+            "UPDATE appointments SET appointment_status = 'cancelled' WHERE id = ?",
+            [appointmentId]
+        );
+
+        // Success message
+        req.session.success = "Appointment cancelled successfully.";
+        res.redirect('/patient/dashboard');
+    } catch (err) {
+        console.error("Error cancelling appointment:", err);
+        res.status(500).send("Error cancelling appointment");
+    }
+});
+
+
 module.exports = router;
