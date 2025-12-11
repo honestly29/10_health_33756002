@@ -2,7 +2,7 @@
 <html>
 <head>
     <title>Patient Dashboard</title>
-    <link rel="stylesheet" href="/public/styles.css">
+    <link rel="stylesheet" href="/styles.css">
 </head>
 
 <body>
@@ -19,6 +19,12 @@
         <% if (error) { %>
             <div class="error-box">
                 <p><%= error %></p>
+            </div>
+        <% } %>
+
+        <% if (success) { %>
+            <div class="success-box">
+                <p><%= success %></p>
             </div>
         <% } %>
 
