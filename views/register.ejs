@@ -9,7 +9,7 @@
 
 <h2>Create an Account</h2>
 
-<form action="/register" method="POST">
+<form action="/auth/register" method="POST">
 
   <label>First Name</label>
   <input type="text" name="first_name" required>
@@ -34,7 +34,7 @@
 </form>
 
 
-<p><a href="/login">Already registered? Login</a></p>
+<p><a href="/auth/login">Already registered? Login</a></p>
 
 <%- include("partials/footer") %>
 

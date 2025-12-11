@@ -15,12 +15,12 @@
 
             <% if (!session || !session.user) { %>
                 <!-- User not logged in -->
-                <li><a href="/register">Register</a></li>
-                <li><a href="/login">Login</a></li>
+                <li><a href="/auth/register">Register</a></li>
+                <li><a href="/auth/login">Login</a></li>
 
             <% } else { %>
                 <!-- User logged in -->
-                <li><a href="/logout">Logout</a></li>
+                <li><a href="/auth/logout">Logout</a></li>
             <% } %>
         </ul>
     </nav>

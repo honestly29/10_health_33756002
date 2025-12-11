@@ -1,36 +1,98 @@
-<!-- views/patient/dashboard.ejs -->
 <!DOCTYPE html>
 <html>
-  <head>
+<head>
     <title>Patient Dashboard</title>
-  </head>
-  <body>
-    <h1>Welcome, <%= user.full_name || user.username %></h1>
+    <link rel="stylesheet" href="/public/styles.css">
+</head>
 
-    <h2>Upcoming appointments</h2>
-    <% if (upcomingAppointments.length === 0) { %>
-      <p>You have no upcoming appointments.</p>
-    <% } else { %>
-      <ul>
-        <% upcomingAppointments.forEach(a => { %>
-          <li>
-            <%= a.date_time %> with Dr. <%= a.doctor_name %>
-          </li>
-        <% }) %>
-      </ul>
-    <% } %>
+<body>
+    <header>
+        <h1>Welcome, <%= user.username %></h1>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/patient/book">Book Appointment</a>
+            <a href="/auth/logout">Logout</a>
+        </nav>
+    </header>
 
-    <h2>Past appointments</h2>
-    <% if (pastAppointments.length === 0) { %>
-      <p>No previous appointments found.</p>
-    <% } else { %>
-      <ul>
-        <% pastAppointments.forEach(a => { %>
-          <li>
-            <%= a.date_time %> with Dr. <%= a.doctor_name %>
-          </li>
-        <% }) %>
-      </ul>
-    <% } %>
-  </body>
+    <main>
+        <% if (error) { %>
+            <div class="error-box">
+                <p><%= error %></p>
+            </div>
+        <% } %>
+
+        <section class="appointments-section">
+            <h2>Upcoming Appointments</h2>
+
+            <% if (upcomingAppointments.length === 0) { %>
+                <p>No upcoming appointments.</p>
+            <% } else { %>
+                <table class="appointments-table">
+                    <thead>
+                        <tr>
+                            <th>Date & Time</th>
+                            <th>Reason</th>
+                            <th>Staff Member</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <% upcomingAppointments.forEach(app => { %>
+                            <tr>
+                                <td><%= app.appointment_date.toLocaleString() %></td>
+                                <td><%= app.reason %></td>
+
+                                <td>
+                                    <%= app.staff_first_name %> <%= app.staff_last_name %>
+                                    (<%= app.staff_username %>)
+                                </td>
+
+                                <td><%= app.appointment_status %></td>
+                            </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+            <% } %>
+        </section>
+
+        <section class="appointments-section">
+            <h2>Past Appointments</h2>
+
+            <% if (pastAppointments.length === 0) { %>
+                <p>No past appointments.</p>
+            <% } else { %>
+                <table class="appointments-table">
+                    <thead>
+                        <tr>
+                            <th>Date & Time</th>
+                            <th>Reason</th>
+                            <th>Staff Member</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <% pastAppointments.forEach(app => { %>
+                            <tr>
+                                <td><%= app.appointment_date.toLocaleString() %></td>
+                                <td><%= app.reason %></td>
+
+                                <td>
+                                    <%= app.staff_first_name %> <%= app.staff_last_name %>
+                                    (<%= app.staff_username %>)
+                                </td>
+
+                                <td><%= app.appointment_status %></td>
+                            </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+            <% } %>
+        </section>
+
+    </main>
+</body>
 </html>

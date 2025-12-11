@@ -100,7 +100,7 @@ router.get('/logout', (req, res) => {
             console.error("Logout error:", err);
             return res.redirect('/');  
         }
-        res.redirect('/login');
+        res.redirect('/');
     });
 });
 

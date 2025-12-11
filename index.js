@@ -61,7 +61,7 @@ const mainRouter = require('./routes/main');
 app.use("/", mainRouter);
 
 const authRouter = require('./routes/auth');
-app.use("/", authRouter);
+app.use("/auth", authRouter);
 
 const patientRouter = require('./routes/patient');
 app.use("/patient", patientRouter);
