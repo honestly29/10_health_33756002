@@ -46,55 +46,63 @@ router.get("/appointments", requireStaff, async (req, res) => {
                 today: [],
                 upcoming: [],
                 past: [],
+                cancelled: [],
                 error: "Staff record not found."
             });
         }
 
         const staffId = staffRows[0].id;
 
-        // Get today's appointments
+        // Today's appointments 
         const [today] = await global.db.query(
             `
-            SELECT 
-                a.*, 
-                p.first_name AS patient_first,
-                p.last_name AS patient_last
+            SELECT a.*, p.first_name AS patient_first, p.last_name AS patient_last
             FROM appointments a
             JOIN patients p ON a.patient_id = p.id
             WHERE a.staff_id = ?
               AND DATE(a.appointment_date) = CURDATE()
+              AND a.appointment_status != 'cancelled'
             ORDER BY a.appointment_date ASC
             `,
             [staffId]
         );
 
-        // Get upcoming appointments
+        // Upcoming appointments
         const [upcoming] = await global.db.query(
             `
-            SELECT 
-                a.*, 
-                p.first_name AS patient_first,
-                p.last_name AS patient_last
+            SELECT a.*, p.first_name AS patient_first, p.last_name AS patient_last
             FROM appointments a
             JOIN patients p ON a.patient_id = p.id
             WHERE a.staff_id = ?
               AND a.appointment_date > NOW()
+              AND a.appointment_status != 'cancelled'
             ORDER BY a.appointment_date ASC
             `,
             [staffId]
         );
 
-        // Get past appointments
+        // Past appointments 
         const [past] = await global.db.query(
             `
-            SELECT 
-                a.*, 
-                p.first_name AS patient_first,
-                p.last_name AS patient_last
+            SELECT a.*, p.first_name AS patient_first, p.last_name AS patient_last
             FROM appointments a
             JOIN patients p ON a.patient_id = p.id
             WHERE a.staff_id = ?
               AND a.appointment_date < CURDATE()
+              AND a.appointment_status != 'cancelled'
+            ORDER BY a.appointment_date DESC
+            `,
+            [staffId]
+        );
+
+        // Cancelled appointments 
+        const [cancelled] = await global.db.query(
+            `
+            SELECT a.*, p.first_name AS patient_first, p.last_name AS patient_last
+            FROM appointments a
+            JOIN patients p ON a.patient_id = p.id
+            WHERE a.staff_id = ?
+              AND a.appointment_status = 'cancelled'
             ORDER BY a.appointment_date DESC
             `,
             [staffId]
@@ -105,20 +113,24 @@ router.get("/appointments", requireStaff, async (req, res) => {
             today,
             upcoming,
             past,
+            cancelled,
             error: null
         });
 
     } catch (err) {
         console.log("Error loading staff appointments:", err);
+
         res.render("staff/appointments", {
             user: req.session.user,
             today: [],
             upcoming: [],
             past: [],
+            cancelled: [],
             error: "An error occurred while loading appointments."
         });
     }
 });
+
 
 
 // GET patient search form
