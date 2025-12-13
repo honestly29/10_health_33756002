@@ -61,5 +61,12 @@ Step 2: Create database schema
 
 Step 3: Create authentication routes (registation, login, logout)
 
+Step 4: Create patient routes (dashboard, book appointments, search appointments)
 
 
+
+To Do:
+Staff page
+add express sanitisation/validation to user inputs
+add an api
+add settings page for user to delete their account etc

@@ -21,6 +21,7 @@ router.get('/dashboard', redirectLogin, async (req, res) => {
             return res.render('patient/dashboard', {
                 user,
                 error: "No patient record found.",
+                success: null,
                 upcomingAppointments: [],
                 pastAppointments: []
             });

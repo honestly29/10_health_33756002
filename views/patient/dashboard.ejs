@@ -23,7 +23,7 @@
             </div>
         <% } %>
 
-        <% if (success) { %>
+        <% if (success && typeof success !== "undefined") { %>
             <div class="success-box">
                 <p><%= success %></p>
             </div>

@@ -1,0 +1,112 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Your Appointments</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+
+<body>
+
+<header>
+    <h1>Your Appointments</h1>
+    <nav>
+        <a href="/staff/dashboard">Dashboard</a>
+        <a href="/staff/patient-search">Patient Search</a>
+        <a href="/auth/logout">Logout</a>
+    </nav>
+</header>
+
+<main>
+
+    <% if (error) { %>
+        <div class="error-box"><%= error %></div>
+    <% } %>
+
+    <!-- Today's Appointments -->
+    <section>
+        <h2>Today's Appointments</h2>
+
+        <% if (today.length === 0) { %>
+            <p>No appointments today.</p>
+        <% } else { %>
+            <table>
+                <tr>
+                    <th>Time</th>
+                    <th>Patient</th>
+                    <th>Reason</th>
+                    <th>Status</th>
+                </tr>
+
+                <% today.forEach(app => { %>
+                <tr>
+                    <td><%= new Date(app.appointment_date).toLocaleTimeString() %></td>
+                    <td><%= app.patient_first %> <%= app.patient_last %></td>
+                    <td><%= app.reason %></td>
+                    <td><%= app.appointment_status %></td>
+                </tr>
+                <% }) %>
+            </table>
+        <% } %>
+    </section>
+
+
+    <!-- Upcoming Appointments -->
+    <section>
+        <h2>Upcoming Appointments</h2>
+
+        <% if (upcoming.length === 0) { %>
+            <p>No upcoming appointments.</p>
+        <% } else { %>
+            <table>
+                <tr>
+                    <th>Date</th>
+                    <th>Patient</th>
+                    <th>Reason</th>
+                    <th>Status</th>
+                </tr>
+
+                <% upcoming.forEach(app => { %>
+                <tr>
+                    <td><%= new Date(app.appointment_date).toLocaleString() %></td>
+                    <td><%= app.patient_first %> <%= app.patient_last %></td>
+                    <td><%= app.reason %></td>
+                    <td><%= app.appointment_status %></td>
+                </tr>
+                <% }) %>
+            </table>
+        <% } %>
+    </section>
+
+
+    <!-- Past Appointments -->
+    <section>
+        <h2>Past Appointments</h2>
+
+        <% if (past.length === 0) { %>
+            <p>No past appointments.</p>
+        <% } else { %>
+            <table>
+                <tr>
+                    <th>Date</th>
+                    <th>Patient</th>
+                    <th>Reason</th>
+                    <th>Status</th>
+                </tr>
+
+                <% past.forEach(app => { %>
+                <tr>
+                    <td><%= new Date(app.appointment_date).toLocaleString() %></td>
+                    <td><%= app.patient_first %> <%= app.patient_last %></td>
+                    <td><%= app.reason %></td>
+                    <td><%= app.appointment_status %></td>
+                </tr>
+                <% }) %>
+            </table>
+        <% } %>
+    </section>
+
+</main>
+
+</body>
+</html>

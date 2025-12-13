@@ -65,7 +65,9 @@ app.use("/auth", authRouter);
 
 const patientRouter = require('./routes/patient');
 app.use("/patient", patientRouter);
-//app.use("/staff", require("./routes/staff"));
+
+const staffRouter = require('./routes/staff');
+app.use("/staff", staffRouter);
 
 
 // 404 handler
