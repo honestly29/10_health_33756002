@@ -131,6 +131,62 @@ router.get("/appointments", requireStaff, async (req, res) => {
     }
 });
 
+// POST /staff/appointments/:id/cancel
+router.post("/appointments/:id/cancel", requireStaff, async (req, res) => {
+    try {
+        const appointmentId = req.params.id;
+        const staffUserId = req.session.user.id;
+
+        // Get the staff ID from users table
+        const [staffRows] = await global.db.query(
+            "SELECT id FROM staff WHERE user_id = ?",
+            [staffUserId]
+        );
+
+        if (staffRows.length === 0) {
+            return res.status(403).send("Staff profile not found.");
+        }
+
+        const staffId = staffRows[0].id;
+
+        // Verify appointment exists and belongs to this staff member
+        const [apptRows] = await global.db.query(
+            "SELECT * FROM appointments WHERE id = ?",
+            [appointmentId]
+        );
+
+        if (apptRows.length === 0) {
+            return res.status(404).send("Appointment not found.");
+        }
+
+        const appointment = apptRows[0];
+
+        if (appointment.staff_id !== staffId) {
+            return res.status(403).send("You are not allowed to cancel this appointment.");
+        }
+
+        // Only allow cancelling future appointments
+        if (new Date(appointment.appointment_date) < new Date()) {
+            return res
+                .status(400)
+                .send("Past appointments cannot be cancelled.");
+        }
+
+        // Update appointment status to cancelled
+        await global.db.query(
+            "UPDATE appointments SET appointment_status = 'cancelled' WHERE id = ?",
+            [appointmentId]
+        );
+
+        // Redirect back to appointments page
+        res.redirect("/staff/appointments");
+
+    } catch (err) {
+        console.error("Error cancelling appointment:", err);
+        res.status(500).send("Error cancelling appointment");
+    }
+});
+
 
 
 // GET patient search form

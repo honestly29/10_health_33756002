@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -23,7 +22,7 @@
         <div class="error-box"><%= error %></div>
     <% } %>
 
-    <!-- Today's Appointments -->
+    <!-- ================= TODAY ================= -->
     <section>
         <h2>Today's Appointments</h2>
 
@@ -36,22 +35,36 @@
                     <th>Patient</th>
                     <th>Reason</th>
                     <th>Status</th>
+                    <th>Actions</th>
                 </tr>
 
                 <% today.forEach(app => { %>
-                <tr>
-                    <td><%= new Date(app.appointment_date).toLocaleTimeString() %></td>
-                    <td><%= app.patient_first %> <%= app.patient_last %></td>
-                    <td><%= app.reason %></td>
-                    <td><%= app.appointment_status %></td>
-                </tr>
+                    <tr>
+                        <td><%= new Date(app.appointment_date).toLocaleTimeString() %></td>
+                        <td><%= app.patient_first %> <%= app.patient_last %></td>
+                        <td><%= app.reason %></td>
+                        <td><%= app.appointment_status %></td>
+                        <td>
+                            <% if (app.appointment_status === "booked") { %>
+                                <form
+                                    action="/staff/appointments/<%= app.id %>/cancel"
+                                    method="POST"
+                                    style="display:inline;"
+                                    onsubmit="return confirm('Cancel this appointment?');"
+                                >
+                                    <button class="btn-cancel">Cancel</button>
+                                </form>
+                            <% } else { %>
+                                —
+                            <% } %>
+                        </td>
+                    </tr>
                 <% }) %>
             </table>
         <% } %>
     </section>
 
-
-    <!-- Upcoming Appointments -->
+    <!-- ================= UPCOMING ================= -->
     <section>
         <h2>Upcoming Appointments</h2>
 
@@ -64,22 +77,36 @@
                     <th>Patient</th>
                     <th>Reason</th>
                     <th>Status</th>
+                    <th>Actions</th>
                 </tr>
 
                 <% upcoming.forEach(app => { %>
-                <tr>
-                    <td><%= new Date(app.appointment_date).toLocaleString() %></td>
-                    <td><%= app.patient_first %> <%= app.patient_last %></td>
-                    <td><%= app.reason %></td>
-                    <td><%= app.appointment_status %></td>
-                </tr>
+                    <tr>
+                        <td><%= new Date(app.appointment_date).toLocaleString() %></td>
+                        <td><%= app.patient_first %> <%= app.patient_last %></td>
+                        <td><%= app.reason %></td>
+                        <td><%= app.appointment_status %></td>
+                        <td>
+                            <% if (app.appointment_status === "booked") { %>
+                                <form
+                                    action="/staff/appointments/<%= app.id %>/cancel"
+                                    method="POST"
+                                    style="display:inline;"
+                                    onsubmit="return confirm('Cancel this appointment?');"
+                                >
+                                    <button class="btn-cancel">Cancel</button>
+                                </form>
+                            <% } else { %>
+                                —
+                            <% } %>
+                        </td>
+                    </tr>
                 <% }) %>
             </table>
         <% } %>
     </section>
 
-
-    <!-- Past Appointments -->
+    <!-- ================= PAST ================= -->
     <section>
         <h2>Past Appointments</h2>
 
@@ -92,21 +119,24 @@
                     <th>Patient</th>
                     <th>Reason</th>
                     <th>Status</th>
+                    <th>Actions</th>
                 </tr>
 
                 <% past.forEach(app => { %>
-                <tr>
-                    <td><%= new Date(app.appointment_date).toLocaleString() %></td>
-                    <td><%= app.patient_first %> <%= app.patient_last %></td>
-                    <td><%= app.reason %></td>
-                    <td><%= app.appointment_status %></td>
-                </tr>
+                    <tr>
+                        <td><%= new Date(app.appointment_date).toLocaleString() %></td>
+                        <td><%= app.patient_first %> <%= app.patient_last %></td>
+                        <td><%= app.reason %></td>
+                        <td><%= app.appointment_status %></td>
+                        <td>—</td>
+                    </tr>
                 <% }) %>
             </table>
         <% } %>
     </section>
 
-    <!-- Cancelled Appointments -->
+
+    <!-- ================= CANCELLED ================= -->
     <section>
         <h2>Cancelled Appointments</h2>
 
@@ -122,17 +152,16 @@
                 </tr>
 
                 <% cancelled.forEach(app => { %>
-                <tr>
-                    <td><%= new Date(app.appointment_date).toLocaleString() %></td>
-                    <td><%= app.patient_first %> <%= app.patient_last %></td>
-                    <td><%= app.reason %></td>
-                    <td style="color: red;"><%= app.appointment_status %></td>
-                </tr>
+                    <tr>
+                        <td><%= new Date(app.appointment_date).toLocaleString() %></td>
+                        <td><%= app.patient_first %> <%= app.patient_last %></td>
+                        <td><%= app.reason %></td>
+                        <td style="color:red;"><%= app.appointment_status %></td>
+                    </tr>
                 <% }) %>
             </table>
         <% } %>
     </section>
-
 
 </main>
 

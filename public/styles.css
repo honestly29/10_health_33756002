@@ -205,6 +205,15 @@ form input[type="submit"]:active {
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.14);
 }
 
+table form {
+    background: none;
+    padding: 0;
+    margin: 0;
+    border: none;
+    max-width: none;
+}
+
+
 
 /* ---------- Search ---------- */
 .search-form {
@@ -237,6 +246,27 @@ th {
     color: #1f6f6b;
     font-weight: bold;
 }
+
+.btn-cancel {
+    background-color: #ef5350;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+
+    width: auto;
+    min-width: unset;
+    display: inline-block;
+}
+
+table td form {
+    display: inline;
+}
+
+
+
 
 /* ---------- Footer ---------- */
 footer {
