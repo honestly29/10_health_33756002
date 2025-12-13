@@ -1,48 +1,247 @@
-h1 {
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/* ---------- Body & Headings ---------- */
+body {
     font-family: Arial, Helvetica, sans-serif;
-    font-size: 20px;
-    color: darkcyan;
+    background-color: #eef7f6;
+    color: #2d3748;
+    line-height: 1.5;
+    text-align: center;
+}
+
+h1 {
+    font-size: 32px;
+    color: #1f6f6b;
+    margin-bottom: 10px;
 }
 
 h2 {
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 20px;
-    color: cadetblue;
+    font-size: 28px;
+    color: #2f9e99;
+    margin-bottom: 10px;
 }
 
-p,li {
-    font-family: Arial, Helvetica, sans-serif;
+p,
+li {
+    font-size: 18px;
+    margin-bottom: 8px;
 }
 
-a:link {
-    color: orangered;
+/* ---------- Links ---------- */
+a {
+    color: #2f9e99;
     text-decoration: none;
-    padding:5px;
-  }
-  
-  /* visited link */
-  a:visited {
-    color: tomato;
-    text-decoration: none;
-    padding:5px;
-  }
-  
-  /* mouse over link */
-  a:hover {
+    padding: 5px;
+    border-radius: 4px;
+}
+
+a:hover {
+    background-color: #dff1ef;
+    color: #1f6f6b;
+}
+
+/* ---------- Layout ---------- */
+header {
+    background: white;
+    padding: 15px 30px;
+    border-bottom: 1px solid #d9e2e1;
+}
+
+nav ul {
+    display: flex;
+    list-style: none;
+    gap: 10px;
+    justify-content: center;
+}
+
+nav a {
+    font-size: 18px;
+    padding: 8px 14px;
+    border-radius: 8px;
+}
+
+nav a:hover {
+    background-color: #e3f3f2;
+}
+
+main {
+    max-width: 1000px;
+    margin: 30px auto;
+    padding: 0 20px;
+}
+
+section {
+    margin-bottom: 30px;
+}
+
+/* ---------- Messages ---------- */
+.error-box {
+    background: #fdeaea;
+    color: #9b2c2c;
+    border: 1px solid #f5c6cb;
+    padding: 12px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+}
+
+.success-box {
+    background: #e6f6f2;
+    color: #065f46;
+    border: 1px solid #b2e5dc;
+    padding: 12px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+}
+
+/* ---------- Dashboard buttons ---------- */
+.dashboard-buttons {
+    font-size: 18px;
+    padding: 20px 0;
+}
+
+.button-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+}
+
+.btn,
+.dash-btn {
+    display: inline-block;
+    padding: 16px 28px;
+    font-size: 18px;
+    font-weight: 600;
     color: white;
+    background-color: #2f9e99;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
     text-decoration: none;
-    background-color: orangered;
-    padding:5px;
-  }
-  
-  /* selected link */
-  a:active {
-    color: blue;
-    text-decoration: none;
-    padding:5px;
-  }
+    transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.12);
+}
+
+.btn:hover,
+.dash-btn:hover {
+    background-color: #238b86;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 18px rgba(0, 0, 0, 0.15);
+}
+
+.btn:active,
+.dash-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.12);
+}
+
+/* ---------- Forms ---------- */
+form {
+    background: white;
+    padding: 28px;
+    border-radius: 12px;
+    border: 1px solid #d9e2e1;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+label {
+    font-weight: 600;
+    margin-bottom: 6px;
+    display: block;
+    color: #1f6f6b;
+}
+
+input,
+select,
+textarea {
+    width: 100%;
+    padding: 12px 14px;
+    margin-bottom: 18px;
+    border: 1px solid #cbd5d4;
+    border-radius: 8px;
+    font-size: 16px;
+    background-color: #f9fdfc;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    outline: none;
+    border-color: #2f9e99;
+    box-shadow: 0 0 0 3px rgba(47, 158, 153, 0.15);
+}
+
+form button,
+form input[type="submit"] {
+    width: 100%;
+    margin-top: 10px;
+    padding: 14px 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: white;
+    background-color: #2f9e99;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
+}
+
+form button:hover,
+form input[type="submit"]:hover {
+    background-color: #238b86;
+    transform: translateY(-1px);
+    box-shadow: 0 10px 18px rgba(0, 0, 0, 0.18);
+}
+
+form button:active,
+form input[type="submit"]:active {
+    transform: translateY(0);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.14);
+}
 
 
+/* ---------- Search ---------- */
+.search-form {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+    max-width: 400px;
+    margin: 0 auto 20px auto;
+}
 
+/* ---------- Tables ---------- */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid #d9e2e1;
+}
 
- 
+th,
+td {
+    padding: 12px;
+    border-bottom: 1px solid #edf2f1;
+    text-align: left;
+}
+
+th {
+    background: #e6f6f2;
+    color: #1f6f6b;
+    font-weight: bold;
+}
+
+/* ---------- Footer ---------- */
+footer {
+    text-align: center;
+    padding: 20px;
+    font-size: 14px;
+    color: #6b7280;
+}
