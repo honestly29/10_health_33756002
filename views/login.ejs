@@ -9,6 +9,12 @@
 
 <h2>Login</h2>
 
+<% if (success) { %>
+    <div class="success-box">
+        <p><%= success %></p>
+    </div>
+<% } %>
+
 <form action="/auth/login" method="POST">
     
     <label>Username</label>

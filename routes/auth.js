@@ -37,7 +37,8 @@ router.post('/register', async (req, res) => {
             [userId, first_name, last_name, email]
         );
 
-        res.redirect('/login');
+        req.session.success = 'Registration successful. Please log in.';
+        res.redirect('/auth/login');
 
     } catch (err) {
         console.error(err);
@@ -48,7 +49,10 @@ router.post('/register', async (req, res) => {
 
 // GET login page
 router.get('/login', (req, res) => {
-    res.render('login', { error: null });
+    const success = req.session.success;
+    delete req.session.success;
+    res.render('login', 
+        { error: null, success: success });
 });
 
 // POST login page

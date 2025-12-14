@@ -3,9 +3,18 @@ const express = require('express');
 const router = express.Router();
 const redirectLogin = require('../middleware/redirectLogin');
 
+// Middleware to ensure only patients can access these pages
+function requirePatient(req, res, next) {
+    const user = req.session.user;
+    if (!user) return res.redirect("/auth/login");
+
+    if (user.role !== "patient") return res.redirect("/auth/login");
+
+    next();
+}
 
 // GET /patient/dashboard
-router.get('/dashboard', redirectLogin, async (req, res) => {
+router.get('/dashboard', requirePatient, async (req, res) => {
     try {
         const user = req.session.user;
         const userId = user.id;
@@ -78,7 +87,7 @@ router.get('/dashboard', redirectLogin, async (req, res) => {
 
 
 // GET /patient/book
-router.get('/book', redirectLogin, async (req, res) => {
+router.get('/book', requirePatient, async (req, res) => {
     try {
         const userID = req.session.user.id;
 
@@ -110,7 +119,7 @@ router.get('/book', redirectLogin, async (req, res) => {
 
 
 // POST /patient/book
-router.post('/book', redirectLogin, async (req, res) => {
+router.post('/book', requirePatient, async (req, res) => {
     try {
         const userID = req.session.user.id;
         const { staff_id, appointment_date, reason } = req.body;
@@ -171,7 +180,7 @@ router.post('/book', redirectLogin, async (req, res) => {
 
 
 // POST /patient/appointments/:id/cancel
-router.post('/appointments/:id/cancel', redirectLogin, async (req, res) => {
+router.post('/appointments/:id/cancel', requirePatient, async (req, res) => {
     try {
         const appointmentId = req.params.id;
         const userID = req.session.user.id;
@@ -219,7 +228,7 @@ router.post('/appointments/:id/cancel', redirectLogin, async (req, res) => {
 
 
 // GET /patient/search
-router.get('/search', redirectLogin, async (req, res) => {
+router.get('/search', requirePatient, async (req, res) => {
     try {
         const userID = req.session.user.id;
 
@@ -252,7 +261,7 @@ router.get('/search', redirectLogin, async (req, res) => {
 
 
 // POST /patient/search
-router.post('/search', redirectLogin, async (req, res) => {
+router.post('/search', requirePatient, async (req, res) => {
     try {
         const userID = req.session.user.id;
         const { date_from, date_to, staff_id, status, keyword } = req.body;

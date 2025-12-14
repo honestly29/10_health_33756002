@@ -8,9 +8,11 @@
 <body>
 
 <header>
-    <h1>Welcome, <%= user.first_name%></h1>
+    <h1>Welcome, <%= user.username%></h1>
     <nav>
         <a href="/">Home</a>
+        <a href="/staff/appointments">View Appointments</a>
+        <a href="/staff/patient-search">Patient Search</a>
         <a href="/auth/logout">Logout</a>
     </nav>
 </header>
