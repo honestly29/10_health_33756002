@@ -32,6 +32,17 @@ router.get("/dashboard", requireStaff, async (req, res) => {
 // GET staff appointments
 router.get("/appointments", requireStaff, async (req, res) => {
     try {
+
+        // Mark past appointments as 'completed'
+        await global.db.query(
+            `
+            UPDATE appointments
+            SET appointment_status = 'completed'
+            WHERE appointment_date < NOW()
+              AND appointment_status = 'booked'
+            `
+        );
+        
         const staffUserId = req.session.user.id;
 
         // Find the staff ID from the logged-in user
