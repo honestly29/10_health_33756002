@@ -8,7 +8,7 @@
 <body>
 
 <header>
-    <h1>Welcome, <%= user.username%></h1>
+    <h1>Welcome, <%= user.username %></h1>
     <nav>
         <a href="/">Home</a>
         <a href="/staff/appointments">View Appointments</a>
@@ -23,22 +23,34 @@
         <div class="error-box"><%= error %></div>
     <% } %>
 
-    <section class="dashboard-buttons">
+    <!-- Dashboard overview card -->
+    <section class="dashboard-card">
+        <h2>Staff Dashboard</h2>
 
-        <h2>Staff Menu</h2>
+        <p>
+            You are logged in as a staff member. From here, you can manage your
+            appointments, view patient information, and carry out daily clinic
+            tasks using the navigation above.
+        </p>
 
-        <div class="button-grid">
+        <ul class="dashboard-info">
+            <li><strong>Role:</strong> Staff</li>
+            <li><strong>Username:</strong> <%= user.username %></li>
+        </ul>
+    </section>
 
-            <a class="dash-btn" href="/staff/appointments">
-                View Appointments
-            </a>
+    <!-- Helpful guidance -->
+    <section class="dashboard-help">
+        <h3>What would you like to do?</h3>
+        <p>
+            Use the navigation bar at the top of the page to access different
+            areas of the system:
+        </p>
 
-            <a class="dash-btn" href="/staff/patient-search">
-                Patient Search
-            </a>
-
-        </div>
-
+        <ul>
+            <li><strong>View Appointments</strong> – see today’s, upcoming, past, and cancelled appointments.</li>
+            <li><strong>Patient Search</strong> – search for patients using their details.</li>
+        </ul>
     </section>
 
 </main>

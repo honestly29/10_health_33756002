@@ -25,6 +25,12 @@ h2 {
     margin-bottom: 10px;
 }
 
+h3 {
+    font-size: 22px;
+    color: #1f6f6b;
+    margin-bottom: 10px;
+}
+
 p,
 li {
     font-size: 18px;
@@ -51,11 +57,12 @@ header {
     border-bottom: 1px solid #d9e2e1;
 }
 
-nav ul {
+nav {
     display: flex;
-    list-style: none;
-    gap: 10px;
     justify-content: center;
+    align-items: center;
+    gap: 12px;
+    margin-top: 8px;
 }
 
 nav a {
@@ -78,6 +85,21 @@ section {
     margin-bottom: 30px;
 }
 
+nav ul {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    list-style: none;
+    padding-left: 0;
+    margin: 8px 0 0 0;
+}
+
+nav ul li {
+    margin: 0;
+}
+
+
 /* ---------- Messages ---------- */
 .error-box {
     background: #fdeaea;
@@ -97,19 +119,7 @@ section {
     margin-bottom: 20px;
 }
 
-/* ---------- Dashboard buttons ---------- */
-.dashboard-buttons {
-    font-size: 18px;
-    padding: 20px 0;
-}
-
-.button-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    justify-content: center;
-}
-
+/* ---------- Buttons ---------- */
 .btn,
 .dash-btn {
     display: inline-block;
@@ -137,6 +147,17 @@ section {
 .dash-btn:active {
     transform: translateY(0);
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.12);
+}
+
+.btn-cancel {
+    background-color: #ef5350;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    display: inline-block;
 }
 
 /* ---------- Forms ---------- */
@@ -192,28 +213,14 @@ form input[type="submit"] {
     box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
 }
 
-form button:hover,
-form input[type="submit"]:hover {
-    background-color: #238b86;
-    transform: translateY(-1px);
-    box-shadow: 0 10px 18px rgba(0, 0, 0, 0.18);
-}
-
-form button:active,
-form input[type="submit"]:active {
-    transform: translateY(0);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.14);
-}
-
 table form {
     background: none;
     padding: 0;
     margin: 0;
     border: none;
     max-width: none;
+    display: inline;
 }
-
-
 
 /* ---------- Search ---------- */
 .search-form {
@@ -247,26 +254,48 @@ th {
     font-weight: bold;
 }
 
-.btn-cancel {
-    background-color: #ef5350;
-    color: white;
-    border: none;
-    padding: 6px 12px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-
-    width: auto;
-    min-width: unset;
-    display: inline-block;
+th:last-child,
+td:last-child {
+    width: 1%;
+    white-space: nowrap;
+    text-align: center;
 }
 
-table td form {
-    display: inline;
+/* ---------- Page Description ---------- */
+.page-description {
+    max-width: 600px;
+    margin: 0 auto 20px auto;
+    font-size: 16px;
+    color: #4a6f6c;
 }
 
+/* ---------- Staff Dashboard ---------- */
+.dashboard-card {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    border: 1px solid #d9e2e1;
+    max-width: 700px;
+    margin: 0 auto 30px auto;
+    text-align: center;
+}
 
+.dashboard-info {
+    list-style-position: inside;
+    padding-left: 0;
+    margin-top: 15px;
+}
 
+.dashboard-help {
+    max-width: 700px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.dashboard-help ul {
+    list-style-position: inside;
+    padding-left: 0;
+}
 
 /* ---------- Footer ---------- */
 footer {
