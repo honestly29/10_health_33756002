@@ -3,13 +3,14 @@
 USE health;
 
 INSERT INTO users (username, hashed_password, user_role) VALUES
-('gold',      '$2b$10$HwhVp39nqGpj4DodVVK3GOo8sAFfQD.0iqXwnkvxAskfebr2deicK', 'patient'),
+('gold_patient',      '$2b$10$HwhVp39nqGpj4DodVVK3GOo8sAFfQD.0iqXwnkvxAskfebr2deicK', 'patient'),
 ('patient1',  '$2a$10$ReAjexvM662z/E0glZ8LsOAUDb/6QFtfPFGb4/BmbSsR5LeWOKyTm', 'patient'),
 ('patient2',  '$2a$10$4RgESg6HgyntolVtJw1IY.csr9e084cVEflumtOwl7.c6SUW0RGxS', 'patient'),
 ('patient3',  '$2a$10$7Ka7jtBT2MzZcW/BvpjDXOtKdmhkQSteLZDT.h44/MkhFSJWPu/4a', 'patient'),
 ('patient4',  '$2a$10$cpz39/xdk/WBow6B8QrNPuGgioJZEu.9U0kTDhkGLYWaomEMhQmv.', 'patient'),
 ('patient5',  '$2a$10$r2QFmZStgZ8kXtBynj.Zneaa1eKEY6sYdQTwHGf6bS2J27xqBnX4O', 'patient'),
 
+('gold_doctor',      '$2b$10$HwhVp39nqGpj4DodVVK3GOo8sAFfQD.0iqXwnkvxAskfebr2deicK', 'staff'),
 ('doctor1',   '$2a$10$HrxiK0ch32AEyXoJ/4HlteKBSYUHgjlYED4xLhpxc7bQ44x4wXt7.', 'staff'),
 ('doctor2',   '$2a$10$AVMTa5D2U3RxBX/kYv016uIzSf4BjNTUqPNwwI1Jxj6wpd0s2C3C6', 'staff'),
 ('nurse1',    '$2a$10$jd0CoWbTUrclBMxdVpHfpOclyORS9GUYDgQ4lSkOoD/2u9kb.O44K', 'staff'),
@@ -20,6 +21,7 @@ INSERT INTO users (username, hashed_password, user_role) VALUES
 -- Insert patient record
 INSERT INTO patients (user_id, first_name, last_name, email, phone, notes)
 VALUES
+((SELECT id FROM users WHERE username='gold_patient'),     'Gold',     'Smiths',    'gold.smiths@example.com', '07000000000', 'No known issues'),
 ((SELECT id FROM users WHERE username='patient1'), 'John',     'Smith',     'john@example.com',     '07111111111', 'No allergies'),
 ((SELECT id FROM users WHERE username='patient2'), 'Lucy',     'Wong',      'lucy@example.com',     '07222222222', 'Diabetic type 2'),
 ((SELECT id FROM users WHERE username='patient3'), 'Michael',  'Brown',     'michael@example.com',  '07333333333', 'Recovering from surgery'),
@@ -30,6 +32,7 @@ VALUES
 -- Insert staff record
 INSERT INTO staff (user_id, first_name, last_name, role_title, email, phone)
 VALUES
+((SELECT id FROM users WHERE username='gold_doctor'),     'Gold',     'Doctors',  'Senior Doctor', 'gold.doctors@clinic.com', '02080000000'),
 ((SELECT id FROM users WHERE username='doctor1'),   'Alice',   'Green',   'Doctor',     'alice.green@clinic.com',    '02080000001'),
 ((SELECT id FROM users WHERE username='doctor2'),   'Robert',  'White',   'Doctor',     'robert.white@clinic.com',   '02080000002'),
 ((SELECT id FROM users WHERE username='nurse1'),    'Emily',   'Johnson', 'Nurse',      'emily.johnson@clinic.com',  '02080000003'),

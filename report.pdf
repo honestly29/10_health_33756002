@@ -72,4 +72,4 @@ add express sanitisation/validation to user inputs
 add an api
 add settings page for user to delete their account etc
 create links.txt
-delete redirectLogin?
+prevent double booking appointments

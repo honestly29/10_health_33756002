@@ -33,7 +33,8 @@ router.get('/dashboard', requirePatient, async (req, res) => {
                 error: "No patient record found.",
                 success: null,
                 upcomingAppointments: [],
-                pastAppointments: []
+                pastAppointments: [],
+                cancelledAppointments: []
             });
         }
 

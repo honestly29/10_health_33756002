@@ -84,7 +84,10 @@ router.post(
             const [rows] = await global.db.query('SELECT id FROM users WHERE username = ?', [username]);
 
             if (rows.length > 0) {
-                return res.render('register', { error: 'Username already taken' });
+                return res.render('register', { 
+                    error: 'Username already taken',
+                    formData: req.body
+                });
             }
 
             // 2. Hash password
@@ -109,9 +112,13 @@ router.post(
 
         } catch (err) {
             console.error(err);
-            res.render('register', { error: 'Something went wrong' });
+            res.render('register', { 
+                error: 'Something went wrong',
+                formData: req.body
+            });
         }
-});
+    }
+);
 
 
 // GET login page
@@ -124,6 +131,7 @@ router.get('/login', (req, res) => {
         success: success || null
     });
 });
+
 
 // POST login page
 router.post('/login', 
@@ -177,19 +185,53 @@ router.post('/login',
                 });
             }
 
-            // 3. Set logged-in user's session
-            req.session.user = {
-                id: user.id,
-                username: user.username,
-                role: user.user_role
-            };
+            // 3. Check that a matching profile exists
+            if (user.user_role === "patient") {
+                const [patients] = await global.db.query(
+                    'SELECT id FROM patients WHERE user_id = ?',
+                    [user.id]
+                );
 
-            // 4. Redirect to correct dashboard
+                if (patients.length === 0) {
+                    return res.render('login', {
+                        error: 'No patient profile found. Please contact the clinic.',
+                        success: null
+                    });
+                }
+
+                req.session.user = {
+                    id: user.id,
+                    username: user.username,
+                    role: user.user_role,
+                    patient_id: patients[0].id
+                };
+
+                return res.redirect('/patient/dashboard');
+            }
+
             if (user.user_role === "staff") {
+                const [staff] = await global.db.query(
+                    'SELECT id FROM staff WHERE user_id = ?',
+                    [user.id]
+                );
+
+                if (staff.length === 0) {
+                    return res.render('login', {
+                        error: 'No staff profile found. Please contact an administrator.',
+                        success: null
+                    });
+                }
+
+                req.session.user = {
+                    id: user.id,
+                    username: user.username,
+                    role: user.user_role,
+                    staff_id: staff[0].id
+                };
+
                 return res.redirect('/staff/dashboard');
             }
 
-            return res.redirect('/patient/dashboard');
             
         } catch (err) {
             console.error(err);

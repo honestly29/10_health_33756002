@@ -107,7 +107,7 @@
     <section class="appointments-section">
         <h2>Cancelled Appointments</h2>
 
-        <% if (cancelledAppointments.length === 0) { %>
+        <% if (!cancelledAppointments || cancelledAppointments.length === 0) { %>
             <p>No cancelled appointments.</p>
         <% } else { %>
             <table class="appointments-table">
