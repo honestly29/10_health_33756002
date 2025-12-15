@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Patient Details</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+
+<header>
+    <h1>Patient Record</h1>
+    <nav>
+        <a href="/staff/dashboard">Home</a>
+        <a href="/staff/patient-search">Back to Search</a>
+        <a href="/auth/logout">Logout</a>
+    </nav>
+</header>
+
+<main>
+    <% if (success) { %>
+        <div class="success-box">
+            <%= success %>
+        </div>
+    <% } %>
+
+
+    <section class="dashboard-card">
+        <h2><%= patient.first_name %> <%= patient.last_name %></h2>
+
+        <ul class="dashboard-info">
+            <li><strong>Email:</strong> <%= patient.email || "—" %></li>
+            <li><strong>Phone:</strong> <%= patient.phone || "—" %></li>
+        </ul>
+    </section>
+
+    <section class="dashboard-card">
+        <h3>Staff Notes</h3>
+
+        <form method="POST" action="/staff/patients/<%= patient.id %>/notes">
+            <textarea
+                name="notes"
+                rows="6"
+                placeholder="Add or update notes about this patient..."
+            ><%= patient.notes || "" %></textarea>
+
+            <button type="submit" class="btn">Save Notes</button>
+        </form>
+    </section>
+
+</main>
+
+</body>
+</html>

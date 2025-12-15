@@ -68,7 +68,7 @@ Step 5: Create staff routes (dashboard, view appointments, search patients)
 
 
 To Do:
-Search patients should render new page and include appointments 
+Registration has no option to add numbers
 add express sanitisation/validation to user inputs
 add an api
 add settings page for user to delete their account etc

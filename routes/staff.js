@@ -42,7 +42,7 @@ router.get("/appointments", requireStaff, async (req, res) => {
               AND appointment_status = 'booked'
             `
         );
-        
+
         const staffUserId = req.session.user.id;
 
         // Find the staff ID from the logged-in user
@@ -266,6 +266,63 @@ router.post("/patient-search", requireStaff, async (req, res) => {
         });
     }
 });
+
+
+router.get("/patients/:id", requireStaff, async (req, res) => {
+    const patientId = req.params.id;
+
+    try {
+        const [rows] = await global.db.query(
+            "SELECT * FROM patients WHERE id = ?",
+            [patientId]
+        );
+
+        if (rows.length === 0) {
+            return res.status(404).send("Patient not found");
+        }
+
+        // Read and clear success message
+        const successMessage = req.session.success || null;
+        req.session.success = null;
+
+        res.render("staff/patient-details", {
+            user: req.session.user,
+            patient: rows[0],
+            error: null,
+            success: successMessage
+        });
+
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Error loading patient");
+    }
+});
+
+
+
+// POST /staff/patients/:id/notes
+router.post("/patients/:id/notes", requireStaff, async (req, res) => {
+    const patientId = req.params.id;
+    const { notes } = req.body;
+
+    try {
+        await global.db.query(
+            "UPDATE patients SET notes = ? WHERE id = ?",
+            [notes, patientId]
+        );
+
+        // Set success message
+        req.session.success = "Patient notes updated successfully.";
+
+        res.redirect(`/staff/patients/${patientId}`);
+
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Error saving notes");
+    }
+});
+
+
 
 
 module.exports = router;
