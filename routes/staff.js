@@ -1,13 +1,14 @@
 const express = require('express');
 const router = express.Router();
 const { body, param, validationResult } = require('express-validator');
+const { withBase } = require('../helpers/path');
 
 // Middleware to ensure only staff can access these pages
 function requireStaff(req, res, next) {
     const user = req.session.user;
-    if (!user) return res.redirect("/auth/login");
+    if (!user) return res.redirect(withBase("/auth/login"));
 
-    if (user.role !== "staff") return res.redirect("/auth/login");
+    if (user.role !== "staff") return res.redirect(withBase("/auth/login"));
 
     next();
 }
@@ -204,7 +205,8 @@ router.post("/appointments/:id/cancel",
             );
 
             // Redirect back to appointments page
-            res.redirect("/staff/appointments");
+            res.redirect(withBase("/staff/appointments"));
+
 
         } catch (err) {
             console.error("Error cancelling appointment:", err);
@@ -403,7 +405,7 @@ router.post(
             // Set success message
             req.session.success = "Patient notes updated successfully.";
 
-            res.redirect(`/staff/patients/${patientId}`);
+            res.redirect(withBase(`/staff/patients/${patientId}`));
 
         } catch (err) {
             console.error(err);

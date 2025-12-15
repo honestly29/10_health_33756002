@@ -2,14 +2,16 @@
 const express = require('express');
 const router = express.Router();
 const { body, param, validationResult } = require('express-validator');
+const { withBase } = require('../helpers/path');
+
 
 
 // Middleware to ensure only patients can access these pages
 function requirePatient(req, res, next) {
     const user = req.session.user;
-    if (!user) return res.redirect("/auth/login");
+    if (!user) return res.redirect(withBase("/auth/login"));
 
-    if (user.role !== "patient") return res.redirect("/auth/login");
+    if (user.role !== "patient") return res.redirect(withBase("/auth/login"));
 
     next();
 }
@@ -216,7 +218,7 @@ router.post(
         );
 
         req.session.success = "Appointment booked successfully!";
-        res.redirect('/patient/dashboard');
+        res.redirect(withBase('/patient/dashboard'));
     }
 );
 
@@ -276,13 +278,14 @@ router.post('/appointments/:id/cancel',
 
             // Success message
             req.session.success = "Appointment cancelled successfully.";
-            res.redirect('/patient/dashboard');
+            res.redirect(withBase('/patient/dashboard'));
 
         } catch (err) {
             console.error("Error cancelling appointment:", err);
             res.status(500).send("Error cancelling appointment");
         }
-});
+    }
+);
 
 
 // GET /patient/search
