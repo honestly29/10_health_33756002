@@ -1,7 +1,8 @@
 // routes/patient.js
 const express = require('express');
 const router = express.Router();
-const redirectLogin = require('../middleware/redirectLogin');
+const { body, param, validationResult } = require('express-validator');
+
 
 // Middleware to ensure only patients can access these pages
 function requirePatient(req, res, next) {
@@ -119,30 +120,50 @@ router.get('/book', requirePatient, async (req, res) => {
 
 
 // POST /patient/book
-router.post('/book', requirePatient, async (req, res) => {
-    try {
-        const userID = req.session.user.id;
-        const { staff_id, appointment_date, reason } = req.body;
+router.post(
+    '/book',
+    requirePatient,
+    [
+        body('staff_id')
+            .isInt()
+            .withMessage('Please select a valid staff member'),
 
-        // Load staff list again (for repopulating form on error)
+        body('appointment_date')
+            .isISO8601()
+            .withMessage('Invalid appointment date'),
+
+        body('reason')
+            .trim()
+            .notEmpty()
+            .withMessage('Reason is required')
+            .isLength({ max: 255 })
+            .withMessage('Reason is too long')
+            .escape()
+    ],
+    async (req, res) => {
+
+        const errors = validationResult(req);
+
+        const userID = req.session.user.id;
+
+        // Reload staff list for re-render
         const [staff] = await global.db.query(
             "SELECT id, first_name, last_name, role_title FROM staff"
         );
 
-        // Check required fields
-        if (!staff_id || !appointment_date || !reason) {
+        if (!errors.isEmpty()) {
             return res.render("patient/book", {
                 user: req.session.user,
                 staffList: staff,
-                error: "Please fill in all fields."
+                error: errors.array()[0].msg
             });
         }
 
-        // Server-side prevention for booking dates in the past
-        const selectedDate = new Date(appointment_date);
-        const now = new Date();
+        const { staff_id, appointment_date, reason } = req.body;
 
-        if (selectedDate < now) {
+        // Prevent booking appointments in the past
+        const selectedDate = new Date(appointment_date);
+        if (selectedDate < new Date()) {
             return res.render("patient/book", {
                 user: req.session.user,
                 staffList: staff,
@@ -157,73 +178,84 @@ router.post('/book', requirePatient, async (req, res) => {
         );
 
         if (patientRows.length === 0) {
-            return res.send("No patient profile found.");
+            return res.status(403).send("No patient profile found.");
         }
 
         const patientId = patientRows[0].id;
 
-        // Insert new appointment
         await global.db.query(
             `INSERT INTO appointments (patient_id, staff_id, appointment_date, reason)
              VALUES (?, ?, ?, ?)`,
             [patientId, staff_id, appointment_date, reason]
         );
 
-        // Add success message
         req.session.success = "Appointment booked successfully!";
         res.redirect('/patient/dashboard');
-    } catch (err) {
-        console.error("Error booking appointment:", err);
-        res.status(500).send("Error booking appointment");
     }
-});
+);
+
 
 
 // POST /patient/appointments/:id/cancel
-router.post('/appointments/:id/cancel', requirePatient, async (req, res) => {
-    try {
-        const appointmentId = req.params.id;
-        const userID = req.session.user.id;
+router.post('/appointments/:id/cancel', 
+    requirePatient, 
+    [
+        param('id')
+            .isInt()
+            .withMessage('Invalid appointment ID')
+    ],
+    async (req, res) => {
 
-        // 1. Get patient ID
-        const [patientRows] = await global.db.query(
-            'SELECT id FROM patients WHERE user_id = ?',
-            [userID]
-        );
-
-        if (patientRows.length === 0) {
-            return res.status(403).send("No patient profile found.");
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).send("Invalid request.");
         }
 
-        const patientId = patientRows[0].id;
+        try {
+            const appointmentId = req.params.id;
+            const userID = req.session.user.id;
 
-        // 2. Verify appointment belongs to patient
-        const [apptRows] = await global.db.query(
-            'SELECT * FROM appointments WHERE id = ?',
-            [appointmentId]
-        );
+            // 1. Get patient ID
+            const [patientRows] = await global.db.query(
+                'SELECT id FROM patients WHERE user_id = ?',
+                [userID]
+            );
 
-        if (apptRows.length === 0) {
-            return res.status(404).send("Appointment not found.");
+            if (patientRows.length === 0) {
+                return res.status(403).send("No patient profile found.");
+            }
+
+            const patientId = patientRows[0].id;
+
+            // 2. Verify appointment exists
+            const [apptRows] = await global.db.query(
+                'SELECT * FROM appointments WHERE id = ?',
+                [appointmentId]
+            );
+
+            if (apptRows.length === 0) {
+                return res.status(404).send("Appointment not found.");
+            }
+
+            // 3. Verify appointment belongs to this patient
+            if (apptRows[0].patient_id !== patientId) {
+                return res.status(403).send("You are not allowed to cancel this appointment.");
+            }
+
+            // 4. Cancel the appointment
+            await global.db.query(
+                "UPDATE appointments SET appointment_status = 'cancelled' WHERE id = ?",
+                [appointmentId]
+            );
+
+            // Success message
+            req.session.success = "Appointment cancelled successfully.";
+            res.redirect('/patient/dashboard');
+
+        } catch (err) {
+            console.error("Error cancelling appointment:", err);
+            res.status(500).send("Error cancelling appointment");
         }
-
-        if (apptRows[0].patient_id !== patientId) {
-            return res.status(403).send("You are not allowed to cancel this appointment.");
-        }
-
-        // 3. Cancel the appointment
-        await global.db.query(
-            "UPDATE appointments SET appointment_status = 'cancelled' WHERE id = ?",
-            [appointmentId]
-        );
-
-        // Success message
-        req.session.success = "Appointment cancelled successfully.";
-        res.redirect('/patient/dashboard');
-    } catch (err) {
-        console.error("Error cancelling appointment:", err);
-        res.status(500).send("Error cancelling appointment");
-    }
 });
 
 
@@ -261,83 +293,123 @@ router.get('/search', requirePatient, async (req, res) => {
 
 
 // POST /patient/search
-router.post('/search', requirePatient, async (req, res) => {
-    try {
-        const userID = req.session.user.id;
-        const { date_from, date_to, staff_id, status, keyword } = req.body;
+router.post('/search', 
+    requirePatient, 
+    [
+        body('date_from')
+            .optional({ checkFalsy: true })
+            .isISO8601()
+            .withMessage('Invalid start date'),
 
-        // Reload staff list
-        const [staffList] = await global.db.query(
-            "SELECT id, first_name, last_name, role_title FROM staff"
-        );
+        body('date_to')
+            .optional({ checkFalsy: true })
+            .isISO8601()
+            .withMessage('Invalid end date'),
 
-        // Get patient ID
-        const [patientRows] = await global.db.query(
-            'SELECT id FROM patients WHERE user_id = ?',
-            [userID]
-        );
+        body('staff_id')
+            .optional({ checkFalsy: true })
+            .isInt()
+            .withMessage('Invalid staff selection'),
 
-        if (patientRows.length === 0) {
-            return res.send("No patient profile found.");
+        body('status')
+            .optional({ checkFalsy: true })
+            .isIn(['booked', 'completed', 'cancelled'])
+            .withMessage('Invalid appointment status'),
+
+        body('keyword')
+            .optional({ checkFalsy: true })
+            .trim()
+            .escape()
+    ],
+    async (req, res) => {
+
+        const errors = validationResult(req);
+
+        try {
+            const userID = req.session.user.id;
+            const { date_from, date_to, staff_id, status, keyword } = req.body;
+
+            // Load staff list
+            const [staffList] = await global.db.query(
+                "SELECT id, first_name, last_name, role_title FROM staff"
+            );
+
+            if (!errors.isEmpty()) {
+                return res.render("patient/search", {
+                    user: req.session.user,
+                    staffList,
+                    results: null,
+                    error: errors.array()[0].msg
+                });
+            }
+
+            // Get patient ID
+            const [patientRows] = await global.db.query(
+                'SELECT id FROM patients WHERE user_id = ?',
+                [userID]
+            );
+
+            if (patientRows.length === 0) {
+                return res.send("No patient profile found.");
+            }
+            
+            const patientId = patientRows[0].id;
+
+            // Base query
+            let sql = `
+                SELECT a.*,
+                    s.first_name AS staff_first_name, 
+                    s.last_name AS staff_last_name,
+                    su.username AS staff_username
+                FROM appointments a
+                JOIN staff s ON a.staff_id = s.id
+                JOIN users su ON s.user_id = su.id
+                WHERE a.patient_id = ?`;
+
+            const params = [patientId];
+
+            // Apply filters
+            if (date_from) {
+                sql += " AND a.appointment_date >= ?";
+                params.push(date_from);
+            }
+
+            if (date_to) {
+                sql += " AND a.appointment_date <= ?";
+                params.push(date_to);
+            }
+
+            if (staff_id) {
+                sql += " AND a.staff_id = ?";
+                params.push(staff_id);
+            }
+
+            if (status) {
+                sql += " AND a.appointment_status = ?";
+                params.push(status);
+            }
+
+            if (keyword) {
+                sql += " AND a.reason LIKE ?";
+                params.push(`%${keyword}%`);
+            }
+
+            sql += " ORDER BY a.appointment_date ASC";
+
+            // Execute query
+            const [results] = await global.db.query(sql, params);
+
+            // Render results
+            res.render("patient/search", {
+                user: req.session.user,
+                staffList,
+                results,
+                error: results.length === 0 ? "No appointments found." : null
+            });
+        } catch (err) {
+            console.error("Error performing search:", err);
+            res.status(500).send("Error performing search");
         }
-        
-        const patientId = patientRows[0].id;
-
-        // Base SQL query
-        let sql = `
-            SELECT a.*,
-                s.first_name AS staff_first_name, 
-                s.last_name AS staff_last_name,
-                su.username AS staff_username
-            FROM appointments a
-            JOIN staff s ON a.staff_id = s.id
-            JOIN users su ON s.user_id = su.id
-            WHERE a.patient_id = ?`;
-
-        const params = [patientId];
-
-        // Apply filters
-        if (date_from) {
-            sql += " AND a.appointment_date >= ?";
-            params.push(date_from);
-        }
-
-        if (date_to) {
-            sql += " AND a.appointment_date <= ?";
-            params.push(date_to);
-        }
-
-        if (staff_id) {
-            sql += " AND a.staff_id = ?";
-            params.push(staff_id);
-        }
-
-        if (status) {
-            sql += " AND a.appointment_status = ?";
-            params.push(status);
-        }
-
-        if (keyword) {
-            sql += " AND a.reason LIKE ?";
-            params.push(`%${keyword}%`);
-        }
-
-        sql += " ORDER BY a.appointment_date ASC";
-
-        // Execute query
-        const [results] = await global.db.query(sql, params);
-
-        // Render results
-        res.render("patient/search", {
-            user: req.session.user,
-            staffList,
-            results,
-            error: results.length === 0 ? "No appointments found." : null
-        });
-    } catch (err) {
-        console.error("Error performing search:", err);
-        res.status(500).send("Error performing search");
-    }
 });
 
 module.exports = router;
