@@ -53,6 +53,9 @@ app.locals.formatDateTime = (date) => {
     });
 };
 
+// Base path for all views
+app.locals.BASE_PATH = process.env.BASE_PATH || "";
+
 // Make the user object available in all views
 app.use((req, res, next) => {
   res.locals.currentUser = req.session.user || null;

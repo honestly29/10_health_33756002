@@ -27,7 +27,7 @@
     <p class="page-description">
         Use the form below to book a new appointment with a staff member. Select the desired staff from the dropdown, choose a date and time that works for you, and provide a reason for the appointment.
 
-    <form action="/patient/book" method="POST">
+    <form action="<%= BASE_PATH %>/patient/book" method="POST">
 
         <label for="staff_id">Choose a staff member:</label>
         <select name="staff_id" id="staff_id" required>
