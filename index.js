@@ -42,7 +42,7 @@ app.use(session({
 app.set('view engine', 'ejs');
 app.set("views", path.join(__dirname, "views"));
 
-// DateTime formatter for all views
+// UK DateTime helper for all views
 app.locals.formatDateTime = (date) => {
     return new Date(date).toLocaleString('en-GB', {
         day: '2-digit',

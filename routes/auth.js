@@ -80,7 +80,7 @@ router.post(
         const { first_name, last_name, email, phone, username, password } = req.body;
 
         try {
-            // 1. Check if username already exists
+            // Check if username already exists
             const [rows] = await global.db.query('SELECT id FROM users WHERE username = ?', [username]);
 
             if (rows.length > 0) {
@@ -90,10 +90,10 @@ router.post(
                 });
             }
 
-            // 2. Hash password
+            // Hash password
             const hashed_password = await bcrypt.hash(password, 10);
             
-            // 3. Insert new user into USERS table
+            // Insert new user into USERS table
             const [result] = await global.db.query(
                 "INSERT INTO users (username, hashed_password, user_role) VALUES (?, ?, 'patient')",
                 [username, hashed_password]
@@ -101,7 +101,7 @@ router.post(
 
             const userId = result.insertId;
 
-            // 4. Insert user details into PATIENTS table
+            // Insert user details into PATIENTS table
             await global.db.query(
                 "INSERT INTO patients (user_id, first_name, last_name, email, phone) VALUES (?, ?, ?, ?, ?)",
                 [userId, first_name, last_name, email, phone]
@@ -160,7 +160,7 @@ router.post('/login',
         const { username, password } = req.body;
 
         try {
-            // 1. Look up user by username
+            // Look up user by username
             const [rows] = await global.db.query(
                 'SELECT * FROM users WHERE username = ?', 
                 [username]
@@ -175,7 +175,7 @@ router.post('/login',
 
             const user = rows[0];
 
-            // 2. Compare passwords
+            // Compare passwords
             const match = await bcrypt.compare(password, user.hashed_password);
 
             if (!match) {
@@ -185,7 +185,7 @@ router.post('/login',
                 });
             }
 
-            // 3. Check that a matching profile exists
+            // Check that a matching profile exists
             if (user.user_role === "patient") {
                 const [patients] = await global.db.query(
                     'SELECT id FROM patients WHERE user_id = ?',

@@ -20,7 +20,7 @@ router.get('/dashboard', requirePatient, async (req, res) => {
         const user = req.session.user;
         const userId = user.id;
 
-        // 1. Find patient's ID in the patients table
+        // Find patient's ID in the patients table
         const [patientRows] = await global.db.query(
             'SELECT id FROM patients WHERE user_id = ?',
             [userId]
@@ -40,7 +40,7 @@ router.get('/dashboard', requirePatient, async (req, res) => {
 
         const patientId = patientRows[0].id;
 
-        // 2. Fetch upcoming appointments
+        // Fetch upcoming appointments
         const [upcoming] = await global.db.query(
             `SELECT
                 a.id, a.appointment_date, a.reason, a.appointment_status,
@@ -57,7 +57,7 @@ router.get('/dashboard', requirePatient, async (req, res) => {
             [patientId]
         );
 
-        // 3. Fetch past appointments
+        // Fetch past appointments
         const [past] = await global.db.query(
             `SELECT
                 a.id, a.appointment_date, a.reason, a.appointment_status,
@@ -74,7 +74,7 @@ router.get('/dashboard', requirePatient, async (req, res) => {
             [patientId]
         );
 
-        // 4. Fetch cancelled appointments
+        // Fetch cancelled appointments
         const [cancelled] = await global.db.query(
             `SELECT
                 a.id, a.appointment_date, a.reason, a.appointment_status,
@@ -118,7 +118,7 @@ router.get('/book', requirePatient, async (req, res) => {
     try {
         const userID = req.session.user.id;
 
-        // 1. Find patient's ID
+        // Find patient's ID
         const [patientRows] = await global.db.query(
             'SELECT id FROM patients WHERE user_id = ?',
             [userID]
@@ -128,7 +128,7 @@ router.get('/book', requirePatient, async (req, res) => {
             return res.send("No patient profile found.");
         }
 
-        // 2. Fetch all staff members for selection
+        // Fetch all staff members for selection
         const [staff] = await global.db.query(
             "SELECT id, first_name, last_name, role_title FROM staff"
         );
@@ -241,7 +241,7 @@ router.post('/appointments/:id/cancel',
             const appointmentId = req.params.id;
             const userID = req.session.user.id;
 
-            // 1. Get patient ID
+            // Get patient ID
             const [patientRows] = await global.db.query(
                 'SELECT id FROM patients WHERE user_id = ?',
                 [userID]
@@ -253,7 +253,7 @@ router.post('/appointments/:id/cancel',
 
             const patientId = patientRows[0].id;
 
-            // 2. Verify appointment exists
+            // Verify appointment exists
             const [apptRows] = await global.db.query(
                 'SELECT * FROM appointments WHERE id = ?',
                 [appointmentId]
@@ -263,12 +263,12 @@ router.post('/appointments/:id/cancel',
                 return res.status(404).send("Appointment not found.");
             }
 
-            // 3. Verify appointment belongs to this patient
+            // Verify appointment belongs to this patient
             if (apptRows[0].patient_id !== patientId) {
                 return res.status(403).send("You are not allowed to cancel this appointment.");
             }
 
-            // 4. Cancel the appointment
+            // Cancel the appointment
             await global.db.query(
                 "UPDATE appointments SET appointment_status = 'cancelled' WHERE id = ?",
                 [appointmentId]
