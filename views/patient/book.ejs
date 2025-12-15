@@ -24,6 +24,9 @@
         </div>
     <% } %>
 
+    <p class="page-description">
+        Use the form below to book a new appointment with a staff member. Select the desired staff from the dropdown, choose a date and time that works for you, and provide a reason for the appointment.
+
     <form action="/patient/book" method="POST">
 
         <label for="staff_id">Choose a staff member:</label>
@@ -46,7 +49,7 @@
         >
 
         <label for="reason">Reason:</label>
-        <input type="text" name="reason" id="reason">
+        <input type="text" name="reason" id="reason" required>
 
         <button type="submit">Book Appointment</button>
     </form>
