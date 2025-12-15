@@ -37,6 +37,11 @@ li {
     margin-bottom: 8px;
 }
 
+.page-section p {
+margin-bottom: 20px;
+line-height: 1.8;
+}
+
 /* ---------- Links ---------- */
 a {
     color: #2f9e99;
