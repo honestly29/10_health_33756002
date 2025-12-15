@@ -43,20 +43,28 @@ VALUES
 -- Insert appointment record
 INSERT INTO appointments (patient_id, staff_id, appointment_date, reason, appointment_status)
 VALUES
-((SELECT id FROM patients WHERE first_name='John'),    (SELECT id FROM staff WHERE last_name='Green'), '2025-01-10 09:00:00', 'Routine checkup', 'booked'),
-((SELECT id FROM patients WHERE first_name='John'),    (SELECT id FROM staff WHERE last_name='Green'), '2025-01-20 14:30:00', 'Follow-up exam', 'completed'),
+((SELECT id FROM patients WHERE first_name='Gold'),    (SELECT id FROM staff WHERE last_name='Doctors'), '2025-01-05 10:00:00', 'Initial consultation', 'completed'),
+((SELECT id FROM patients WHERE first_name='Gold'),    (SELECT id FROM staff WHERE last_name='Doctors'), '2025-02-15 15:30:00', 'Follow-up visit', 'completed'),       
+((SELECT id FROM patients WHERE first_name='Gold'),    (SELECT id FROM staff WHERE last_name='Green'), '2025-05-20 09:00:00', 'Routine checkup', 'cancelled'),
+((SELECT id FROM patients WHERE first_name='Gold'),    (SELECT id FROM staff WHERE last_name='Clark'), '2025-08-25 11:15:00', 'Lab results discussion', 'completed'),
+((SELECT id FROM patients WHERE first_name='Gold'),    (SELECT id FROM staff WHERE last_name='Clark'), '2025-12-27 12:00:00', 'Routine checkup', 'booked'),
 
-((SELECT id FROM patients WHERE first_name='Lucy'),    (SELECT id FROM staff WHERE last_name='White'), '2025-02-05 11:00:00', 'Diabetes review', 'booked'),
+
+((SELECT id FROM patients WHERE first_name='John'),    (SELECT id FROM staff WHERE last_name='Green'), '2025-10-10 09:00:00', 'Routine checkup', 'completed'),
+((SELECT id FROM patients WHERE first_name='John'),    (SELECT id FROM staff WHERE last_name='Green'), '2025-12-10 14:30:00', 'Follow-up exam', 'completed'),
+((SELECT id FROM patients WHERE first_name='John'),    (SELECT id FROM staff WHERE last_name='Doctors'), '2026-01-10 14:30:00', 'Blood check', 'booked'),
+
+((SELECT id FROM patients WHERE first_name='Lucy'),    (SELECT id FROM staff WHERE last_name='White'), '2025-02-05 11:00:00', 'Diabetes review', 'completed'),
 ((SELECT id FROM patients WHERE first_name='Lucy'),    (SELECT id FROM staff WHERE last_name='Clark'), '2025-03-12 10:00:00', 'Blood pressure test', 'cancelled'),
 
-((SELECT id FROM patients WHERE first_name='Michael'), (SELECT id FROM staff WHERE last_name='Johnson'), '2025-04-01 09:30:00', 'Wound check', 'completed'),
-((SELECT id FROM patients WHERE first_name='Michael'), (SELECT id FROM staff WHERE last_name='Hall'),    '2025-04-15 15:00:00', 'Physiotherapy session', 'booked'),
+((SELECT id FROM patients WHERE first_name='Michael'), (SELECT id FROM staff WHERE last_name='Doctors'), '2025-04-01 09:30:00', 'Wound check', 'completed'),
+((SELECT id FROM patients WHERE first_name='Michael'), (SELECT id FROM staff WHERE last_name='Hall'),    '2025-04-15 15:00:00', 'Physiotherapy session', 'completed'),
 
 ((SELECT id FROM patients WHERE first_name='Sarah'),   (SELECT id FROM staff WHERE last_name='Clark'), '2025-05-10 13:00:00', 'Asthma review', 'completed'),
-((SELECT id FROM patients WHERE first_name='Sarah'),   (SELECT id FROM staff WHERE last_name='White'), '2025-06-20 16:00:00', 'Allergy consultation', 'booked'),
+((SELECT id FROM patients WHERE first_name='Sarah'),   (SELECT id FROM staff WHERE last_name='White'), '2025-06-20 16:00:00', 'Allergy consultation', 'completed'),
 
-((SELECT id FROM patients WHERE first_name='Daniel'),  (SELECT id FROM staff WHERE last_name='Green'), '2025-07-02 09:00:00', 'Heart check', 'cancelled'),
+((SELECT id FROM patients WHERE first_name='Daniel'),  (SELECT id FROM staff WHERE last_name='Doctors'), '2026-01-07 09:00:00', 'Heart check', 'cancelled'),
 ((SELECT id FROM patients WHERE first_name='Daniel'),  (SELECT id FROM staff WHERE last_name='Hall'),  '2025-08-14 12:30:00', 'Rehabilitation session', 'completed'),
 
-((SELECT id FROM patients WHERE first_name='Daniel'),  (SELECT id FROM staff WHERE last_name='Johnson'), '2025-09-01 10:45:00', 'Nurse assessment', 'booked'),
-((SELECT id FROM patients WHERE first_name='Lucy'),    (SELECT id FROM staff WHERE last_name='Green'),  '2025-10-22 14:00:00', 'General checkup', 'booked');
+((SELECT id FROM patients WHERE first_name='Daniel'),  (SELECT id FROM staff WHERE last_name='Johnson'), '2025-09-01 10:45:00', 'Nurse assessment', 'completed'),
+((SELECT id FROM patients WHERE first_name='Lucy'),    (SELECT id FROM staff WHERE last_name='Green'),  '2025-10-22 14:00:00', 'General checkup', 'completed');
