@@ -10,7 +10,7 @@ router.get('/register', (req, res) => {
 
 // POST register page
 router.post('/register', async (req, res) => {
-    const { first_name, last_name, email, username, password } = req.body;
+    const { first_name, last_name, email, phone, username, password } = req.body;
 
     try {
         // 1. Check if username already exists
@@ -33,8 +33,8 @@ router.post('/register', async (req, res) => {
 
         // 4. Insert user details into PATIENTS table
         await global.db.query(
-            "INSERT INTO patients (user_id, first_name, last_name, email) VALUES (?, ?, ?, ?)",
-            [userId, first_name, last_name, email]
+            "INSERT INTO patients (user_id, first_name, last_name, email, phone) VALUES (?, ?, ?, ?, ?)",
+            [userId, first_name, last_name, email, phone]
         );
 
         req.session.success = 'Registration successful. Please log in.';
