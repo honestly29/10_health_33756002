@@ -43,11 +43,15 @@ router.get('/dashboard', requirePatient, async (req, res) => {
         const [upcoming] = await global.db.query(
             `SELECT
                 a.id, a.appointment_date, a.reason, a.appointment_status,
-                s.first_name AS staff_first_name, s.last_name AS staff_last_name, su.username AS staff_username
+                s.first_name AS staff_first_name, 
+                s.last_name AS staff_last_name, 
+                su.username AS staff_username
             FROM appointments a
             JOIN staff s ON a.staff_id = s.id
             JOIN users su ON s.user_id = su.id
-            WHERE a.patient_id = ? AND a.appointment_date >= NOW()
+            WHERE a.patient_id = ?
+            AND a.appointment_date >= NOW()
+            AND a.appointment_status != 'cancelled'
             ORDER BY a.appointment_date ASC`,
             [patientId]
         );
@@ -56,11 +60,31 @@ router.get('/dashboard', requirePatient, async (req, res) => {
         const [past] = await global.db.query(
             `SELECT
                 a.id, a.appointment_date, a.reason, a.appointment_status,
-                s.first_name AS staff_first_name, s.last_name AS staff_last_name, su.username AS staff_username
+                s.first_name AS staff_first_name, 
+                s.last_name AS staff_last_name, 
+                su.username AS staff_username
             FROM appointments a
             JOIN staff s ON a.staff_id = s.id
             JOIN users su ON s.user_id = su.id
-            WHERE a.patient_id = ? AND a.appointment_date < NOW()
+            WHERE a.patient_id = ?
+            AND a.appointment_date < NOW()
+            AND a.appointment_status != 'cancelled'
+            ORDER BY a.appointment_date DESC`,
+            [patientId]
+        );
+
+        // 4. Fetch cancelled appointments
+        const [cancelled] = await global.db.query(
+            `SELECT
+                a.id, a.appointment_date, a.reason, a.appointment_status,
+                s.first_name AS staff_first_name, 
+                s.last_name AS staff_last_name, 
+                su.username AS staff_username
+            FROM appointments a
+            JOIN staff s ON a.staff_id = s.id
+            JOIN users su ON s.user_id = su.id
+            WHERE a.patient_id = ?
+            AND a.appointment_status = 'cancelled'
             ORDER BY a.appointment_date DESC`,
             [patientId]
         );
@@ -74,6 +98,7 @@ router.get('/dashboard', requirePatient, async (req, res) => {
             user,
             upcomingAppointments: upcoming,
             pastAppointments: past,
+            cancelledAppointments: cancelled,
             error: null,
             success: successMessage
         });

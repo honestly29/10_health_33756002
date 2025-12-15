@@ -6,112 +6,136 @@
 </head>
 
 <body>
-    <header>
-        <h1>Welcome, <%= user.username %></h1>
-        <nav>
-            <a href="/">Home</a>
-            <a href="/patient/book">Book Appointment</a>
-            <a href="/patient/search">Search Appointments</a>
-            <a href="/auth/logout">Logout</a>
-        </nav>
-    </header>
+<header>
+    <h1>Welcome, <%= user.username %></h1>
+    <nav>
+        <a href="/">Home</a>
+        <a href="/patient/book">Book Appointment</a>
+        <a href="/patient/search">Search Appointments</a>
+        <a href="/auth/logout">Logout</a>
+    </nav>
+</header>
 
-    <main>
-        <% if (error) { %>
-            <div class="error-box">
-                <p><%= error %></p>
-            </div>
-        <% } %>
+<main>
 
-        <% if (success && typeof success !== "undefined") { %>
-            <div class="success-box">
-                <p><%= success %></p>
-            </div>
-        <% } %>
+    <% if (error) { %>
+        <div class="error-box"><p><%= error %></p></div>
+    <% } %>
 
-        <section class="appointments-section">
-            <h2>Upcoming Appointments</h2>
+    <% if (success) { %>
+        <div class="success-box"><p><%= success %></p></div>
+    <% } %>
 
-            <% if (upcomingAppointments.length === 0) { %>
-                <p>No upcoming appointments.</p>
-            <% } else { %>
-                <table class="appointments-table">
-                    <thead>
+    <!-- Upcoming appointments -->
+    <section class="appointments-section">
+        <h2>Upcoming Appointments</h2>
+
+        <% if (upcomingAppointments.length === 0) { %>
+            <p>No upcoming appointments.</p>
+        <% } else { %>
+            <table class="appointments-table">
+                <thead>
+                    <tr>
+                        <th>Date & Time</th>
+                        <th>Reason</th>
+                        <th>Staff Member</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% upcomingAppointments.forEach(app => { %>
                         <tr>
-                            <th>Date & Time</th>
-                            <th>Reason</th>
-                            <th>Staff Member</th>
-                            <th>Status</th>
-                            <th>Actions</th>
+                            <td><%= app.appointment_date.toLocaleString() %></td>
+                            <td><%= app.reason %></td>
+                            <td>
+                                <%= app.staff_first_name %> <%= app.staff_last_name %>
+                                (<%= app.staff_username %>)
+                            </td>
+                            <td><%= app.appointment_status %></td>
+                            <td>
+                                <form
+                                    action="/patient/appointments/<%= app.id %>/cancel"
+                                    method="POST"
+                                    style="display:inline;"
+                                    onsubmit="return confirm('Are you sure you want to cancel this appointment?');"
+                                >
+                                    <button type="submit" class="btn-cancel">Cancel</button>
+                                </form>
+                            </td>
                         </tr>
-                    </thead>
+                    <% }) %>
+                </tbody>
+            </table>
+        <% } %>
+    </section>
 
-                    <tbody>
-                        <% upcomingAppointments.forEach(app => { %>
-                            <tr>
-                                <td><%= app.appointment_date.toLocaleString() %></td>
-                                <td><%= app.reason %></td>
+    <!-- Past appointments -->
+    <section class="appointments-section">
+        <h2>Past Appointments</h2>
 
-                                <td>
-                                    <%= app.staff_first_name %> <%= app.staff_last_name %>
-                                    (<%= app.staff_username %>)
-                                </td>
-
-                                <td><%= app.appointment_status %></td>
-
-                                <td>
-                                    <% if (app.appointment_status === "booked") { %>
-                                        <form 
-                                            action="/patient/appointments/<%= app.id %>/cancel" 
-                                            method="POST"
-                                            onsubmit="return confirm('Are you sure you want to cancel this appointment?');"
-                                        >
-                                            <button type="submit">Cancel</button>
-                                        </form>
-                                    <% } %>
-                                </td>
-                            </tr>
-                        <% }) %>
-                    </tbody>
-                </table>
-            <% } %>
-        </section>
-
-        <section class="appointments-section">
-            <h2>Past Appointments</h2>
-
-            <% if (pastAppointments.length === 0) { %>
-                <p>No past appointments.</p>
-            <% } else { %>
-                <table class="appointments-table">
-                    <thead>
+        <% if (pastAppointments.length === 0) { %>
+            <p>No past appointments.</p>
+        <% } else { %>
+            <table class="appointments-table">
+                <thead>
+                    <tr>
+                        <th>Date & Time</th>
+                        <th>Reason</th>
+                        <th>Staff Member</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% pastAppointments.forEach(app => { %>
                         <tr>
-                            <th>Date & Time</th>
-                            <th>Reason</th>
-                            <th>Staff Member</th>
-                            <th>Status</th>
+                            <td><%= app.appointment_date.toLocaleString() %></td>
+                            <td><%= app.reason %></td>
+                            <td>
+                                <%= app.staff_first_name %> <%= app.staff_last_name %>
+                                (<%= app.staff_username %>)
+                            </td>
+                            <td><%= app.appointment_status %></td>
                         </tr>
-                    </thead>
+                    <% }) %>
+                </tbody>
+            </table>
+        <% } %>
+    </section>
 
-                    <tbody>
-                        <% pastAppointments.forEach(app => { %>
-                            <tr>
-                                <td><%= app.appointment_date.toLocaleString() %></td>
-                                <td><%= app.reason %></td>
+    <!-- Cancelled appointments -->
+    <section class="appointments-section">
+        <h2>Cancelled Appointments</h2>
 
-                                <td>
-                                    <%= app.staff_first_name %> <%= app.staff_last_name %>
-                                    (<%= app.staff_username %>)
-                                </td>
+        <% if (cancelledAppointments.length === 0) { %>
+            <p>No cancelled appointments.</p>
+        <% } else { %>
+            <table class="appointments-table">
+                <thead>
+                    <tr>
+                        <th>Date & Time</th>
+                        <th>Reason</th>
+                        <th>Staff Member</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% cancelledAppointments.forEach(app => { %>
+                        <tr>
+                            <td><%= app.appointment_date.toLocaleString() %></td>
+                            <td><%= app.reason %></td>
+                            <td>
+                                <%= app.staff_first_name %> <%= app.staff_last_name %>
+                                (<%= app.staff_username %>)
+                            </td>
+                            <td style="color:red;"><%= app.appointment_status %></td>
+                        </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        <% } %>
+    </section>
 
-                                <td><%= app.appointment_status %></td>
-                            </tr>
-                        <% }) %>
-                    </tbody>
-                </table>
-            <% } %>
-        </section>
-
-    </main>
+</main>
 </body>
 </html>
