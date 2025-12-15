@@ -22,7 +22,7 @@
         <div class="error-box"><%= error %></div>
     <% } %>
 
-    <!-- ================= TODAY ================= -->
+    <!-- Today's appointments -->
     <section>
         <h2>Today's Appointments</h2>
 
@@ -40,7 +40,7 @@
 
                 <% today.forEach(app => { %>
                     <tr>
-                        <td><%= new Date(app.appointment_date).toLocaleTimeString() %></td>
+                        <td><%= formatDateTime(app.appointment_date) %></td>
                         <td><%= app.patient_first %> <%= app.patient_last %></td>
                         <td><%= app.reason %></td>
                         <td><%= app.appointment_status %></td>
@@ -64,7 +64,7 @@
         <% } %>
     </section>
 
-    <!-- ================= UPCOMING ================= -->
+    <!-- Upcoming appointments -->
     <section>
         <h2>Upcoming Appointments</h2>
 
@@ -82,7 +82,7 @@
 
                 <% upcoming.forEach(app => { %>
                     <tr>
-                        <td><%= new Date(app.appointment_date).toLocaleString() %></td>
+                        <td><%= formatDateTime(app.appointment_date) %></td>
                         <td><%= app.patient_first %> <%= app.patient_last %></td>
                         <td><%= app.reason %></td>
                         <td><%= app.appointment_status %></td>
@@ -106,7 +106,7 @@
         <% } %>
     </section>
 
-    <!-- ================= PAST ================= -->
+    <!-- Past appointments -->
     <section>
         <h2>Past Appointments</h2>
 
@@ -124,7 +124,7 @@
 
                 <% past.forEach(app => { %>
                     <tr>
-                        <td><%= new Date(app.appointment_date).toLocaleString() %></td>
+                        <td><%= formatDateTime(app.appointment_date) %></td>
                         <td><%= app.patient_first %> <%= app.patient_last %></td>
                         <td><%= app.reason %></td>
                         <td><%= app.appointment_status %></td>
@@ -136,7 +136,7 @@
     </section>
 
 
-    <!-- ================= CANCELLED ================= -->
+    <!-- Cancelled appointments -->
     <section>
         <h2>Cancelled Appointments</h2>
 
@@ -153,7 +153,7 @@
 
                 <% cancelled.forEach(app => { %>
                     <tr>
-                        <td><%= new Date(app.appointment_date).toLocaleString() %></td>
+                        <td><%= formatDateTime(app.appointment_date) %></td>
                         <td><%= app.patient_first %> <%= app.patient_last %></td>
                         <td><%= app.reason %></td>
                         <td style="color:red;"><%= app.appointment_status %></td>

@@ -46,7 +46,7 @@
                 <tbody>
                     <% upcomingAppointments.forEach(app => { %>
                         <tr>
-                            <td><%= app.appointment_date.toLocaleString() %></td>
+                            <td><%= formatDateTime(app.appointment_date) %></td>
                             <td><%= app.reason %></td>
                             <td>
                                 <%= app.staff_first_name %> <%= app.staff_last_name %>
@@ -89,7 +89,7 @@
                 <tbody>
                     <% pastAppointments.forEach(app => { %>
                         <tr>
-                            <td><%= app.appointment_date.toLocaleString() %></td>
+                            <td><%= formatDateTime(app.appointment_date) %></td>
                             <td><%= app.reason %></td>
                             <td>
                                 <%= app.staff_first_name %> <%= app.staff_last_name %>
@@ -122,7 +122,7 @@
                 <tbody>
                     <% cancelledAppointments.forEach(app => { %>
                         <tr>
-                            <td><%= app.appointment_date.toLocaleString() %></td>
+                            <td><%= formatDateTime(app.appointment_date) %></td>
                             <td><%= app.reason %></td>
                             <td>
                                 <%= app.staff_first_name %> <%= app.staff_last_name %>

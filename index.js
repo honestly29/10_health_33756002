@@ -42,6 +42,17 @@ app.use(session({
 app.set('view engine', 'ejs');
 app.set("views", path.join(__dirname, "views"));
 
+// DateTime formatter for all views
+app.locals.formatDateTime = (date) => {
+    return new Date(date).toLocaleString('en-GB', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+    });
+};
+
 // Make the user object available in all views
 app.use((req, res, next) => {
   res.locals.currentUser = req.session.user || null;
