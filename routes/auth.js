@@ -2,6 +2,8 @@ const express = require('express');
 const bcrypt = require('bcrypt');
 const router = express.Router();
 const { body, validationResult } = require('express-validator');
+const { withBase } = require('../helpers/path');
+
 
 
 // GET register page
@@ -108,7 +110,8 @@ router.post(
             );
 
             req.session.success = 'Registration successful. Please log in.';
-            res.redirect('/auth/login');
+            res.redirect(withBase('/auth/login'));
+
 
         } catch (err) {
             console.error(err);
@@ -206,7 +209,7 @@ router.post('/login',
                     patient_id: patients[0].id
                 };
 
-                return res.redirect('/patient/dashboard');
+                return res.redirect(withBase('/patient/dashboard'));
             }
 
             if (user.user_role === "staff") {
@@ -229,7 +232,7 @@ router.post('/login',
                     staff_id: staff[0].id
                 };
 
-                return res.redirect('/staff/dashboard');
+                return res.redirect(withBase('/staff/dashboard'));
             }
 
             
@@ -248,9 +251,9 @@ router.get('/logout', (req, res) => {
     req.session.destroy(err => {
         if (err) {
             console.error("Logout error:", err);
-            return res.redirect('/');  
+            return res.redirect(withBase('/'));  
         }
-        res.redirect('/');
+        res.redirect(withBase('/'));
     });
 });
 
