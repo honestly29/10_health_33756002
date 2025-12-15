@@ -20,6 +20,15 @@
 
             <% } else { %>
                 <!-- User logged in -->
+
+                <% if (session.user.role === 'patient') { %>
+                    <li><a href="/patient/dashboard">Patient Dashboard</a></li>
+                <% } %>
+
+                <% if (session.user.role === 'staff') { %>
+                    <li><a href="/staff/dashboard">Staff Dashboard</a></li>
+                <% } %>
+
                 <li><a href="/auth/logout">Logout</a></li>
             <% } %>
         </ul>
