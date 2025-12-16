@@ -2,7 +2,6 @@ const express = require ('express');
 const ejs = require('ejs');
 const path = require('path');
 const session = require('express-session');
-const dotenv = require('dotenv');
 require('dotenv').config();
 const mysql = require('mysql2/promise');
 
@@ -29,12 +28,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
 app.use(session({
-    secret: 'somerandomstuff',
+    secret: process.env.SESSION_SECRET || 'dev_fallback',
     resave: false,
     saveUninitialized: false,
-    cookie: {
-        expires: 600000  
-    }
+    cookie: { maxAge: 600000 }
 }));
 
 
