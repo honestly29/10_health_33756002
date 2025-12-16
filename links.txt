@@ -1,0 +1,11 @@
+home=https://www.doc.gold.ac.uk/usr/325/
+about=https://www.doc.gold.ac.uk/usr/325/about
+register=https://www.doc.gold.ac.uk/usr/325/auth/register
+login=https://www.doc.gold.ac.uk/usr/325/auth/login
+logout=https://www.doc.gold.ac.uk/usr/325/auth/logout
+patient_dashboard=https://www.doc.gold.ac.uk/usr/325/patient/dashboard
+patient_book_appointment=https://www.doc.gold.ac.uk/usr/325/patient/book
+staff_dashboard=https://www.doc.gold.ac.uk/usr/325/staff/dashboard
+staff_manage_appointments=https://www.doc.gold.ac.uk/usr/325/staff/appointments
+staff_search_patients=https://www.doc.gold.ac.uk/usr/325/staff/patient-search
+
